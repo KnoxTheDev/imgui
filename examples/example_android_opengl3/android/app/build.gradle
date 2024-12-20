@@ -2,15 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion "33.0.2"
-    ndkVersion "25.2.9519653"
+    compileSdkVersion 34
+    ndkVersion "27.2.12479018"
 
     defaultConfig {
         applicationId "imgui.example.android"
         namespace "imgui.example.android"
-        minSdkVersion 24
-        targetSdkVersion 33
+        minSdkVersion 21
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
     }
