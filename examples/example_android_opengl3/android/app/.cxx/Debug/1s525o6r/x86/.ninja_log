@@ -1,0 +1,22 @@
+# ninja log v5
+5	1691	1734711685586712621	CMakeFiles/ImGuiExample.dir/home/user/imgui/imgui_demo.cpp.o	ced178e0ec5a548d
+0	1889	1734711685766733308	CMakeFiles/ImGuiExample.dir/main.cpp.o	ad632412424415b6
+1895	3939	1734711687838971443	CMakeFiles/ImGuiExample.dir/home/user/imgui/imgui_tables.cpp.o	25b06b1c017935e
+0	4493	1734711688323027069	CMakeFiles/ImGuiExample.dir/home/user/imgui/imgui.cpp.o	d0b81a75c0ec02c6
+1694	4623	1734711688491046377	CMakeFiles/ImGuiExample.dir/home/user/imgui/imgui_draw.cpp.o	f66a995b65d1fcf6
+4493	4625	1734711688536051549	CMakeFiles/ImGuiExample.dir/home/user/Sdk/ndk/27.2.12479018/sources/android/native_app_glue/android_native_app_glue.c.o	24db3fa8fcfd3e88
+4625	4855	1734711688765077867	CMakeFiles/ImGuiExample.dir/home/user/imgui/backends/imgui_impl_opengl3.cpp.o	3c1771f83ddc0de1
+4623	4886	1734711688796081430	CMakeFiles/ImGuiExample.dir/home/user/imgui/backends/imgui_impl_android.cpp.o	81d3bc9749568e68
+3940	5838	1734711689731188890	CMakeFiles/ImGuiExample.dir/home/user/imgui/imgui_widgets.cpp.o	ba797596a07ecba1
+5838	5909	1734711689816198659	../../../../build/intermediates/cxx/Debug/1s525o6r/obj/x86/libImGuiExample.so	b60ab6a0c12d5314
+13	659	1734712760248207375	CMakeFiles/ImGuiExample.dir/main.cpp.o	ad632412424415b6
+659	740	1734712760331216914	../../../../build/intermediates/cxx/Debug/1s525o6r/obj/x86/libImGuiExample.so	b60ab6a0c12d5314
+25	710	1734713455673122034	CMakeFiles/ImGuiExample.dir/main.cpp.o	ad632412424415b6
+711	788	1734713455755131458	../../../../build/intermediates/cxx/Debug/1s525o6r/obj/x86/libImGuiExample.so	b60ab6a0c12d5314
+7	615	1734714297510861678	CMakeFiles/ImGuiExample.dir/main.cpp.o	ad632412424415b6
+616	720	1734714297619874205	../../../../build/intermediates/cxx/Debug/1s525o6r/obj/x86/libImGuiExample.so	b60ab6a0c12d5314
+17	615	1734714662432796627	CMakeFiles/ImGuiExample.dir/main.cpp.o	ad632412424415b6
+615	692	1734714662514806051	../../../../build/intermediates/cxx/Debug/1s525o6r/obj/x86/libImGuiExample.so	b60ab6a0c12d5314
+15	1448	1734715099032968425	CMakeFiles/ImGuiExample.dir/main.cpp.o	ad632412424415b6
+1448	1533	1734715099122978769	../../../../build/intermediates/cxx/Debug/1s525o6r/obj/x86/libImGuiExample.so	b60ab6a0c12d5314
+0	24	0	clean	555d76b7ba61da42
