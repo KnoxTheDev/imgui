@@ -18,6 +18,10 @@ static std::string g_IniFilename = "";  // Store ini filename
 static const char* g_LogTag = "ImGuiExample";
 static std::ofstream logFile;  // File stream for logging
 
+// Global JNI references
+JavaVM* g_JVM = nullptr;
+jobject g_Context = nullptr;
+
 // Helper function to log to a file
 void LogToFile(const std::string& message)
 {
@@ -29,6 +33,46 @@ void LogToFile(const std::string& message)
     {
         __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "Failed to write to log file!");
     }
+}
+
+// Function to open a URL in the default browser
+void OpenURLInBrowser(const char* url)
+{
+    if (g_JVM == nullptr || g_Context == nullptr)
+    {
+        LogToFile("OpenURLInBrowser: JVM or context is null");
+        return;
+    }
+
+    JNIEnv* env;
+    if (g_JVM->GetEnv((void**)&env, JNI_VERSION_1_6) != JNI_OK)
+    {
+        LogToFile("OpenURLInBrowser: Failed to get JNI environment");
+        return;
+    }
+
+    jclass context_class = env->GetObjectClass(g_Context);
+    jmethodID method_id = env->GetMethodID(context_class, "startActivity", "(Landroid/content/Intent;)V");
+
+    if (method_id == nullptr)
+    {
+        LogToFile("OpenURLInBrowser: Failed to find startActivity method");
+        return;
+    }
+
+    // Create an Intent to open the URL
+    jclass intent_class = env->FindClass("android/content/Intent");
+    jmethodID constructor = env->GetMethodID(intent_class, "<init>", "(Ljava/lang/String;)V");
+
+    jstring j_url = env->NewStringUTF(url);
+    jobject intent = env->NewObject(intent_class, constructor, j_url);
+
+    env->CallVoidMethod(g_Context, method_id, intent);
+
+    env->DeleteLocalRef(j_url);
+    env->DeleteLocalRef(intent);
+    env->DeleteLocalRef(intent_class);
+    env->DeleteLocalRef(context_class);
 }
 
 // Forward declarations
@@ -168,6 +212,10 @@ void Init(struct android_app* app)
     LogToFile("Initialization Complete");
 
     g_Initialized = true;
+
+    // Get the JVM and context
+    g_App->activity->vm->GetEnv((void**)&g_JVM, JNI_VERSION_1_6);
+    g_Context = app->activity->clazz;
 }
 
 // Poll input events (simplified)
@@ -197,6 +245,7 @@ void MainLoopStep()
     if (ImGui::Button("Click Me"))
     {
         LogToFile("Button clicked!");
+        OpenURLInBrowser("https://www.youtube.com/@sultanrecords7");
     }
     ImGui::End();
 
