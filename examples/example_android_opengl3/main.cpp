@@ -33,6 +33,10 @@ ImFont* font = nullptr;
 int g_ImguiWidth = 800;  // Width in pixels
 int g_ImguiHeight = 600; // Height in pixels
 
+// Define FPS tracking variables
+static float timeElapsed = 0.0f;
+static int lastFPS = 60;  // Default FPS to 60
+
 // Main code
 static void handleAppCmd(struct android_app* app, int32_t appCmd)
 {
@@ -91,25 +95,6 @@ void android_main(struct android_app* app)
     }
 }
 
-// Function to load font from assets
-ImFont* LoadFontFromAsset(const char* fontPath, float size)
-{
-    ImGuiIO& io = ImGui::GetIO();
-    void* fontData = nullptr;
-    int fontDataSize = GetAssetData(fontPath, &fontData);  // Get the asset data from the asset folder
-
-    if (fontDataSize == 0)
-    {
-        __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "Font file not found: %s", fontPath);
-        return nullptr;
-    }
-
-    // Load the font from the asset data
-    ImFont* font = io.Fonts->AddFontFromMemoryTTF(fontData, fontDataSize, size);
-    IM_FREE(fontData);  // Free the loaded font data
-    return font;
-}
-
 void Init(struct android_app* app)
 {
     if (g_Initialized)
@@ -119,37 +104,34 @@ void Init(struct android_app* app)
     ANativeWindow_acquire(g_App->window);
 
     // Initialize EGL (same as before)
-    {
-        g_EglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-        if (g_EglDisplay == EGL_NO_DISPLAY)
-            __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglGetDisplay(EGL_DEFAULT_DISPLAY) returned EGL_NO_DISPLAY");
+    g_EglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+    if (g_EglDisplay == EGL_NO_DISPLAY)
+        __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglGetDisplay(EGL_DEFAULT_DISPLAY) returned EGL_NO_DISPLAY");
 
-        if (eglInitialize(g_EglDisplay, 0, 0) != EGL_TRUE)
-            __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglInitialize() returned with an error");
+    if (eglInitialize(g_EglDisplay, 0, 0) != EGL_TRUE)
+        __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglInitialize() returned with an error");
 
-        const EGLint egl_attributes[] = { EGL_BLUE_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_RED_SIZE, 8, EGL_DEPTH_SIZE, 24, EGL_SURFACE_TYPE, EGL_WINDOW_BIT, EGL_NONE };
-        EGLint num_configs = 0;
-        if (eglChooseConfig(g_EglDisplay, egl_attributes, nullptr, 0, &num_configs) != EGL_TRUE)
-            __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglChooseConfig() returned with an error");
-        if (num_configs == 0)
-            __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglChooseConfig() returned 0 matching config");
+    const EGLint egl_attributes[] = { EGL_BLUE_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_RED_SIZE, 8, EGL_DEPTH_SIZE, 24, EGL_SURFACE_TYPE, EGL_WINDOW_BIT, EGL_NONE };
+    EGLint num_configs = 0;
+    if (eglChooseConfig(g_EglDisplay, egl_attributes, nullptr, 0, &num_configs) != EGL_TRUE)
+        __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglChooseConfig() returned with an error");
+    if (num_configs == 0)
+        __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglChooseConfig() returned 0 matching config");
 
-        // Get the first matching config
-        EGLConfig egl_config;
-        eglChooseConfig(g_EglDisplay, egl_attributes, &egl_config, 1, &num_configs);
-        EGLint egl_format;
-        eglGetConfigAttrib(g_EglDisplay, egl_config, EGL_NATIVE_VISUAL_ID, &egl_format);
-        ANativeWindow_setBuffersGeometry(g_App->window, 0, 0, egl_format);
+    EGLConfig egl_config;
+    eglChooseConfig(g_EglDisplay, egl_attributes, &egl_config, 1, &num_configs);
+    EGLint egl_format;
+    eglGetConfigAttrib(g_EglDisplay, egl_config, EGL_NATIVE_VISUAL_ID, &egl_format);
+    ANativeWindow_setBuffersGeometry(g_App->window, 0, 0, egl_format);
 
-        const EGLint egl_context_attributes[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE };
-        g_EglContext = eglCreateContext(g_EglDisplay, egl_config, EGL_NO_CONTEXT, egl_context_attributes);
+    const EGLint egl_context_attributes[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE };
+    g_EglContext = eglCreateContext(g_EglDisplay, egl_config, EGL_NO_CONTEXT, egl_context_attributes);
 
-        if (g_EglContext == EGL_NO_CONTEXT)
-            __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglCreateContext() returned EGL_NO_CONTEXT");
+    if (g_EglContext == EGL_NO_CONTEXT)
+        __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglCreateContext() returned EGL_NO_CONTEXT");
 
-        g_EglSurface = eglCreateWindowSurface(g_EglDisplay, egl_config, g_App->window, nullptr);
-        eglMakeCurrent(g_EglDisplay, g_EglSurface, g_EglSurface, g_EglContext);
-    }
+    g_EglSurface = eglCreateWindowSurface(g_EglDisplay, egl_config, g_App->window, nullptr);
+    eglMakeCurrent(g_EglDisplay, g_EglSurface, g_EglSurface, g_EglContext);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -192,6 +174,26 @@ void Init(struct android_app* app)
     g_Initialized = true;
 }
 
+// Function to load font from assets
+ImFont* LoadFontFromAsset(const char* fontPath, float size)
+{
+    ImGuiIO& io = ImGui::GetIO();
+    void* fontData = nullptr;
+    int fontDataSize = GetAssetData(fontPath, &fontData);  // Get the asset data from the asset folder
+
+    if (fontDataSize == 0)
+    {
+        __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "Font file not found: %s", fontPath);
+        return nullptr;
+    }
+
+    // Load the font from the asset data
+    ImFont* font = io.Fonts->AddFontFromMemoryTTF(fontData, fontDataSize, size);
+    IM_FREE(fontData);  // Free the loaded font data
+    return font;
+}
+
+// Function to update FPS and show the FPS in a separate window
 void MainLoopStep()
 {
     ImGuiIO& io = ImGui::GetIO();
@@ -215,10 +217,7 @@ void MainLoopStep()
     ImGui_ImplAndroid_NewFrame();
     ImGui::NewFrame();
 
-    // Calculate FPS and update title every 1 second
-    static float timeElapsed = 0.0f;
-    static int lastFPS = 0;
-
+    // Calculate FPS and update every 1 second
     timeElapsed += io.DeltaTime;  // Accumulate time since the last frame
     if (timeElapsed >= 1.0f)  // Update FPS every 1 second
     {
@@ -226,18 +225,49 @@ void MainLoopStep()
         lastFPS = static_cast<int>(io.Framerate);  // Update FPS to the nearest integer
     }
 
-    // Create window with updated title showing FPS
-    std::string title = "Knox HAX | " + std::to_string(lastFPS) + " FPS";  // Create title with FPS
+    // Main window (no FPS counter)
+    std::string title = "Knox HAX";  // Static title without FPS
+    ImVec2 windowSize = ImVec2(g_ImguiWidth, g_ImguiHeight);
+    ImGui::SetNextWindowSize(windowSize, ImGuiCond_Always);
+    ImGui::Begin(title.c_str(), nullptr, ImGuiWindowFlags_NoResize);
 
-    // Allow window to be movable and resizable (without overriding position/size)
-    // No need to call SetNextWindowPos or SetNextWindowSize here!
-    ImGui::Begin(title.c_str(), nullptr, ImGuiWindowFlags_None);  // No flag to disable movement or resizing
-
-    // ImGui window contents
-    ImGui::Text("Hello from ImGui in Android + OpenGL ES 3!"); // Just display a simple greeting
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+    // Main content window (for testing purposes)
+    ImGui::Text("Hello from ImGui in Android + OpenGL ES 3!");
 
     ImGui::End();  // End the window
+
+    // Create a separate FPS window at the bottom-right corner
+    ImVec2 screenSize = io.DisplaySize;
+    ImVec2 windowPos = ImVec2(screenSize.x - 150.0f, screenSize.y - 50.0f);  // Position at bottom-right with padding
+
+    ImGui::SetNextWindowPos(windowPos, ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(140.0f, 40.0f), ImGuiCond_Always);  // Fixed size for FPS window
+    ImGui::SetNextWindowBgAlpha(0.0f);  // Make window background transparent
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));  // No border
+
+    // Begin the FPS window (no background, no border)
+    ImGui::Begin("FPS Window", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground);
+
+    // Customize FPS text (white with black stroke)
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));  // White text
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 5));  // Padding for stroke effect
+    ImGui::Text("FPS: %d", lastFPS);  // Display FPS
+
+    // Add a black stroke effect to text
+    ImVec2 textPos = ImGui::GetCursorScreenPos();
+    ImVec4 strokeColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);  // Black stroke
+
+    // Stroke effect (draw text slightly offset in all directions)
+    ImGui::GetWindowDrawList()->AddText(ImVec2(textPos.x - 1, textPos.y - 1), ImColor(strokeColor), ("FPS: " + std::to_string(lastFPS)).c_str());
+    ImGui::GetWindowDrawList()->AddText(ImVec2(textPos.x + 1, textPos.y - 1), ImColor(strokeColor), ("FPS: " + std::to_string(lastFPS)).c_str());
+    ImGui::GetWindowDrawList()->AddText(ImVec2(textPos.x - 1, textPos.y + 1), ImColor(strokeColor), ("FPS: " + std::to_string(lastFPS)).c_str());
+    ImGui::GetWindowDrawList()->AddText(ImVec2(textPos.x + 1, textPos.y + 1), ImColor(strokeColor), ("FPS: " + std::to_string(lastFPS)).c_str());
+
+    // Reset text style
+    ImGui::PopStyleVar();
+    ImGui::PopStyleColor();
+
+    ImGui::End();  // End FPS window
 
     // Rendering
     ImGui::Render();
