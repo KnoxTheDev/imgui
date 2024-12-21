@@ -229,11 +229,8 @@ void MainLoopStep()
     // Create window with updated title showing FPS
     std::string title = "Knox HAX | " + std::to_string(lastFPS) + " FPS";  // Create title with FPS
 
-    // Allow window to be movable and resizable
-    ImGui::SetNextWindowSize(ImVec2(500, 300), ImGuiCond_Always);  // Set default size if desired
-    ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_Once);  // Set initial position once
-
-    // Start ImGui window with resize and move functionality
+    // Allow window to be movable and resizable (without overriding position/size)
+    // No need to call SetNextWindowPos or SetNextWindowSize here!
     ImGui::Begin(title.c_str(), nullptr, ImGuiWindowFlags_None);  // No flag to disable movement or resizing
 
     // ImGui window contents
