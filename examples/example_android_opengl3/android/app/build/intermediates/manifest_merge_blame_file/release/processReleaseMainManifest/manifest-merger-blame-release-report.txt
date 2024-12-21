@@ -1,0 +1,52 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="imgui.example.android"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="34" />
+10
+11    <application
+11-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:4:5-23:19
+12        android:allowBackup="false"
+12-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:6:9-36
+13        android:extractNativeLibs="true"
+14        android:fullBackupContent="false"
+14-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:7:9-42
+15        android:hasCode="true"
+15-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:8:9-31
+16        android:label="ImGuiExample" >
+16-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:5:9-37
+17        <activity
+17-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:10:9-22:20
+18            android:name="imgui.example.android.MainActivity"
+18-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:11:13-62
+19            android:configChanges="orientation|keyboardHidden|screenSize"
+19-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:13:13-74
+20            android:exported="true"
+20-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:14:13-36
+21            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+21-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:12:13-71
+22            <meta-data
+22-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:15:13-16:48
+23                android:name="android.app.lib_name"
+23-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:15:24-59
+24                android:value="ImGuiExample" />
+24-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:16:17-45
+25
+26            <intent-filter>
+26-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:18:13-21:29
+27                <action android:name="android.intent.action.MAIN" />
+27-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:19:17-69
+27-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:19:25-66
+28
+29                <category android:name="android.intent.category.LAUNCHER" />
+29-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:20:17-77
+29-->/home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:20:27-74
+30            </intent-filter>
+31        </activity>
+32    </application>
+33
+34</manifest>

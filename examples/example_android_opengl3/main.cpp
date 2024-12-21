@@ -224,17 +224,21 @@ void MainLoopStep()
     {
         timeElapsed = 0.0f;  // Reset the time accumulator
         lastFPS = static_cast<int>(io.Framerate);  // Update FPS to the nearest integer
-
-        // Update the title here
-        std::string title = "Knox HAX | " + std::to_string(lastFPS) + " FPS";  // Create title with FPS
-        __android_log_print(ANDROID_LOG_INFO, g_LogTag, "Updated Title: %s", title.c_str());
-        // You could also directly set the title in the system if needed, but this is just for logging.
     }
 
-    // Only display the window, no need to recreate it every time
-    ImGui::Begin("Knox HAX");
+    // Create window with updated title showing FPS
+    std::string title = "Knox HAX | " + std::to_string(lastFPS) + " FPS";  // Create title with FPS
 
+    // Allow window to be movable and resizable
+    ImGui::SetNextWindowSize(ImVec2(500, 300), ImGuiCond_Always);  // Set default size if desired
+    ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_Once);  // Set initial position once
+
+    // Start ImGui window with resize and move functionality
+    ImGui::Begin(title.c_str(), nullptr, ImGuiWindowFlags_None);  // No flag to disable movement or resizing
+
+    // ImGui window contents
     ImGui::Text("Hello from ImGui in Android + OpenGL ES 3!"); // Just display a simple greeting
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 
     ImGui::End();  // End the window
 

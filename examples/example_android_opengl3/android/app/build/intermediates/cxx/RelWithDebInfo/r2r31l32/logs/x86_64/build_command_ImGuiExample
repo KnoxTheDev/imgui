@@ -1,0 +1,4 @@
+/home/user/Sdk/cmake/3.22.1/bin/ninja \
+  -C \
+  /home/user/imgui/examples/example_android_opengl3/android/app/.cxx/RelWithDebInfo/r2r31l32/x86_64 \
+  ImGuiExample

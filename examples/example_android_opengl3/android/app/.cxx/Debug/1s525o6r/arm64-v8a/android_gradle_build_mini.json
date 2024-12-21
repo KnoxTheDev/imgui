@@ -1,0 +1,27 @@
+{
+  "buildFiles": [
+    "/home/user/imgui/examples/example_android_opengl3/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/user/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/home/user/imgui/examples/example_android_opengl3/android/app/.cxx/Debug/1s525o6r/arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/user/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/home/user/imgui/examples/example_android_opengl3/android/app/.cxx/Debug/1s525o6r/arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "ImGuiExample::@6890427a1f51a3e7e1df": {
+      "artifactName": "ImGuiExample",
+      "abi": "arm64-v8a",
+      "output": "/home/user/imgui/examples/example_android_opengl3/android/app/build/intermediates/cxx/Debug/1s525o6r/obj/arm64-v8a/libImGuiExample.so",
+      "runtimeFiles": []
+    }
+  }
+}
