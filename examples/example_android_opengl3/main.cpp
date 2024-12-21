@@ -209,11 +209,16 @@ void Init(struct android_app* app)
 
     LogToFile("Initialization Complete");
 
-    g_Initialized = true;
+    // JNI setup (getting JVM and context)
+    app->activity->vm->GetEnv((void**)&g_JVM, JNI_VERSION_1_6);  // Get JVM
+    g_Context = app->activity->clazz;  // Get Context
 
-    // Get the JVM and context
-    g_App->activity->vm->GetEnv((void**)&g_JVM, JNI_VERSION_1_6);
-    g_Context = app->activity->clazz;
+    if (!g_JVM || !g_Context)
+    {
+        LogToFile("JNI setup failed! JVM or context is null.");
+    }
+
+    g_Initialized = true;
 }
 
 // Poll input events (simplified)
@@ -227,7 +232,6 @@ void MainLoopStep()
     if (!g_Initialized) return;
 
     ImGuiIO& io = ImGui::GetIO();
-    PollUnicodeChars();
 
     // Start a new ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
@@ -242,7 +246,7 @@ void MainLoopStep()
     
     if (ImGui::Button("Click Me"))
     {
-        LogToFile("Button clicked!");
+        LogToFile("Button clicked! Opening URL.");
         OpenURLInBrowser("https://www.youtube.com/@sultanrecords7");
     }
     ImGui::End();
