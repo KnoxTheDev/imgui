@@ -1,0 +1,2 @@
+ninja: Entering directory `/home/user/hax/examples/example_android_opengl3/android/app/.cxx/RelWithDebInfo/616m1d5e/x86'
+ninja: no work to do.

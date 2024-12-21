@@ -1,0 +1,13 @@
+# ninja log v5
+0	2913	1734789808375772627	CMakeFiles/ImGuiExample.dir/main.cpp.o	9b6f923c3de60ec9
+14	15093	1734789820495824353	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_demo.cpp.o	21365a4ab3cb5eb8
+2920	21111	1734789826536348524	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_draw.cpp.o	af48c75be85ab957
+15093	21969	1734789827435426542	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_tables.cpp.o	b9e6aa2ef07f6670
+21969	22670	1734789828155489026	CMakeFiles/ImGuiExample.dir/home/user/Sdk/ndk/27.2.12479018/sources/android/native_app_glue/android_native_app_glue.c.o	8c9fe861f044a3ff
+22670	23322	1734789828792544307	CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_android.cpp.o	99e2b3ae824fbdfd
+23322	24053	1734789829546609742	CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_opengl3.cpp.o	56f3185cfb7e4d10
+11	34746	1734789840132528343	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui.cpp.o	59832f7b96d2a9ca
+21111	35703	1734789841184619639	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_widgets.cpp.o	866db82713e4ccd8
+35703	35780	1734789841282628144	../../../../build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/armeabi-v7a/libImGuiExample.so	eeb031a1be601c91
+5	1028	1734790182354224591	CMakeFiles/ImGuiExample.dir/main.cpp.o	9b6f923c3de60ec9
+1028	1143	1734790182473234918	../../../../build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/armeabi-v7a/libImGuiExample.so	eeb031a1be601c91

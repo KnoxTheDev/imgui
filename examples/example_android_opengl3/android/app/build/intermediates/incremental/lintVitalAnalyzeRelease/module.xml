@@ -1,6 +1,6 @@
 <lint-module
     format="1"
-    dir="/home/user/imgui/examples/example_android_opengl3/android/app"
+    dir="/home/user/hax/examples/example_android_opengl3/android/app"
     name=":app"
     type="APP"
     maven="android:app:unspecified"

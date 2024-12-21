@@ -1,61 +1,61 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:2:1-24:12
-INJECTED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:2:1-24:12
-INJECTED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:2:1-24:12
-INJECTED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:2:1-24:12
+ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:2:1-24:12
+INJECTED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:2:1-24:12
+INJECTED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:2:1-24:12
+INJECTED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:2:1-24:12
 	package
-		INJECTED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
 	android:versionName
-		INJECTED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
 	android:versionCode
-		INJECTED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
 	xmlns:android
-		ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:2:11-69
+		ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:2:11-69
 application
-ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:4:5-23:19
-INJECTED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:4:5-23:19
+ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:4:5-23:19
+INJECTED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:4:5-23:19
 	android:extractNativeLibs
-		INJECTED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
 	android:label
-		ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:5:9-37
+		ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:5:9-37
 	android:hasCode
-		ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:8:9-31
+		ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:8:9-31
 	android:fullBackupContent
-		ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:7:9-42
+		ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:7:9-42
 	android:allowBackup
-		ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:6:9-36
+		ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:6:9-36
 activity#imgui.example.android.MainActivity
-ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:10:9-22:20
+ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:10:9-22:20
 	android:exported
-		ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:14:13-36
+		ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:14:13-36
 	android:configChanges
-		ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:13:13-74
+		ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:13:13-74
 	android:theme
-		ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:12:13-71
+		ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:12:13-71
 	android:name
-		ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:11:13-62
+		ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:11:13-62
 meta-data#android.app.lib_name
-ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:15:13-16:48
+ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:15:13-16:48
 	android:value
-		ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:16:17-45
+		ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:16:17-45
 	android:name
-		ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:15:24-59
+		ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:15:24-59
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:18:13-21:29
+ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:18:13-21:29
 action#android.intent.action.MAIN
-ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:19:17-69
+ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:19:17-69
 	android:name
-		ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:19:25-66
+		ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:19:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:20:17-77
+ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:20:17-77
 	android:name
-		ADDED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:20:27-74
+		ADDED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:20:27-74
 uses-sdk
-INJECTED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
-INJECTED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
+INJECTED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
+INJECTED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from /home/user/imgui/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml
