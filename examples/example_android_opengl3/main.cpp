@@ -1,11 +1,3 @@
-// dear imgui: standalone example application for Android + OpenGL ES 3
-
-// Learn about Dear ImGui:
-// - FAQ                  https://dearimgui.com/faq
-// - Getting Started      https://dearimgui.com/getting-started
-// - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
-// - Introduction, links and more at the top of imgui.cpp
-
 #include "imgui.h"
 #include "imgui_impl_android.h"
 #include "imgui_impl_opengl3.h"
@@ -22,7 +14,7 @@ static EGLSurface           g_EglSurface = EGL_NO_SURFACE;
 static EGLContext           g_EglContext = EGL_NO_CONTEXT;
 static struct android_app*  g_App = nullptr;
 static bool                 g_Initialized = false;
-static char                 g_LogTag[] = "ImGuiExample";
+static char                 g_LogTag[] = "KnoxHAX";  // Rebranded log tag
 static std::string          g_IniFilename = "";
 
 // Forward declarations of helper functions
@@ -32,6 +24,14 @@ static void MainLoopStep();
 static int ShowSoftKeyboardInput();
 static int PollUnicodeChars();
 static int GetAssetData(const char* filename, void** out_data);
+// Forward declaration of the font loading function
+ImFont* LoadFontFromAsset(const char* fontPath, float size);
+// Declare the global font variable (only one font now)
+ImFont* font = nullptr;
+
+// New variables for controlling the size of ImGui in pixels
+int g_ImguiWidth = 800;  // Width in pixels
+int g_ImguiHeight = 600; // Height in pixels
 
 // Main code
 static void handleAppCmd(struct android_app* app, int32_t appCmd)
@@ -78,7 +78,7 @@ void android_main(struct android_app* app)
             if (app->destroyRequested != 0)
             {
                 // shutdown() should have been called already while processing the
-                // app command APP_CMD_TERM_WINDOW. But we play save here
+                // app command APP_CMD_TERM_WINDOW. But we play safe here
                 if (!g_Initialized)
                     Shutdown();
 
@@ -91,6 +91,25 @@ void android_main(struct android_app* app)
     }
 }
 
+// Function to load font from assets
+ImFont* LoadFontFromAsset(const char* fontPath, float size)
+{
+    ImGuiIO& io = ImGui::GetIO();
+    void* fontData = nullptr;
+    int fontDataSize = GetAssetData(fontPath, &fontData);  // Get the asset data from the asset folder
+
+    if (fontDataSize == 0)
+    {
+        __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "Font file not found: %s", fontPath);
+        return nullptr;
+    }
+
+    // Load the font from the asset data
+    ImFont* font = io.Fonts->AddFontFromMemoryTTF(fontData, fontDataSize, size);
+    IM_FREE(fontData);  // Free the loaded font data
+    return font;
+}
+
 void Init(struct android_app* app)
 {
     if (g_Initialized)
@@ -99,8 +118,7 @@ void Init(struct android_app* app)
     g_App = app;
     ANativeWindow_acquire(g_App->window);
 
-    // Initialize EGL
-    // This is mostly boilerplate code for EGL...
+    // Initialize EGL (same as before)
     {
         g_EglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
         if (g_EglDisplay == EGL_NO_DISPLAY)
@@ -139,54 +157,37 @@ void Init(struct android_app* app)
     ImGuiIO& io = ImGui::GetIO();
 
     // Redirect loading/saving of .ini file to our location.
-    // Make sure 'g_IniFilename' persists while we use Dear ImGui.
-    g_IniFilename = std::string(app->activity->internalDataPath) + "/imgui.ini";
-    io.IniFilename = g_IniFilename.c_str();;
+    g_IniFilename = std::string(app->activity->internalDataPath) + "/knoxhax.ini";  // Changed filename
+    io.IniFilename = g_IniFilename.c_str();
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer backends
     ImGui_ImplAndroid_Init(g_App->window);
     ImGui_ImplOpenGL3_Init("#version 300 es");
 
-    // Load Fonts
-    // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
-    // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
-    // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
-    // - Read 'docs/FONTS.md' for more instructions and details.
-    // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
-    // - Android: The TTF files have to be placed into the assets/ directory (android/app/src/main/assets), we use our GetAssetData() helper to retrieve them.
+    // Load Arial font only
+    const char* fontPath = "fonts/Arial.ttf";  // Path to Arial font
+    font = LoadFontFromAsset(fontPath, 22.0f);
 
-    // We load the default font with increased size to improve readability on many devices with "high" DPI.
-    // FIXME: Put some effort into DPI awareness.
-    // Important: when calling AddFontFromMemoryTTF(), ownership of font_data is transferred by Dear ImGui by default (deleted is handled by Dear ImGui), unless we set FontDataOwnedByAtlas=false in ImFontConfig
-    ImFontConfig font_cfg;
-    font_cfg.SizePixels = 22.0f;
-    io.Fonts->AddFontDefault(&font_cfg);
-    //void* font_data;
-    //int font_data_size;
-    //ImFont* font;
-    //font_data_size = GetAssetData("segoeui.ttf", &font_data);
-    //font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 16.0f);
-    //IM_ASSERT(font != nullptr);
-    //font_data_size = GetAssetData("DroidSans.ttf", &font_data);
-    //font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 16.0f);
-    //IM_ASSERT(font != nullptr);
-    //font_data_size = GetAssetData("Roboto-Medium.ttf", &font_data);
-    //font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 16.0f);
-    //IM_ASSERT(font != nullptr);
-    //font_data_size = GetAssetData("Cousine-Regular.ttf", &font_data);
-    //font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 15.0f);
-    //IM_ASSERT(font != nullptr);
-    //font_data_size = GetAssetData("ArialUni.ttf", &font_data);
-    //font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
-    //IM_ASSERT(font != nullptr);
+    // Set Arial as default font
+    if (font) {
+        io.FontDefault = font;
+    }
 
-    // Arbitrary scale-up
-    // FIXME: Put some effort into DPI awareness
-    ImGui::GetStyle().ScaleAllSizes(3.0f);
+    // Arbitrary scaling calculation based on screen resolution
+    const ImVec2 screenSize = io.DisplaySize;
+
+    // Default scaling factor for most devices
+    float scaleFactor = 3.5f;
+    float scaleFactorText = 3.0f;
+
+    // Apply scale factor to all UI elements
+    ImGui::GetStyle().ScaleAllSizes(scaleFactor);
+
+    // Apply scaling for font only
+    io.FontGlobalScale = scaleFactorText;
 
     g_Initialized = true;
 }
@@ -197,14 +198,10 @@ void MainLoopStep()
     if (g_EglDisplay == EGL_NO_DISPLAY)
         return;
 
-    // Our state
-    // (we use static, which essentially makes the variable globals, as a convenience to keep the example code easy to follow)
-    static bool show_demo_window = true;
-    static bool show_another_window = false;
-    static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    // Define clear color (you can modify this to any RGBA value you want)
+    static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);  // Dark grayish-blue color
 
     // Poll Unicode characters via JNI
-    // FIXME: do not call this every frame because of JNI overhead
     PollUnicodeChars();
 
     // Open on-screen (soft) input if requested by Dear ImGui
@@ -218,42 +215,28 @@ void MainLoopStep()
     ImGui_ImplAndroid_NewFrame();
     ImGui::NewFrame();
 
-    // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-    if (show_demo_window)
-        ImGui::ShowDemoWindow(&show_demo_window);
+    // Calculate FPS and update title every 1 second
+    static float timeElapsed = 0.0f;
+    static int lastFPS = 0;
 
-    // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+    timeElapsed += io.DeltaTime;  // Accumulate time since the last frame
+    if (timeElapsed >= 1.0f)  // Update FPS every 1 second
     {
-        static float f = 0.0f;
-        static int counter = 0;
+        timeElapsed = 0.0f;  // Reset the time accumulator
+        lastFPS = static_cast<int>(io.Framerate);  // Update FPS to the nearest integer
 
-        ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
-
-        ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-        ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-        ImGui::Checkbox("Another Window", &show_another_window);
-
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-        ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-        if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-            counter++;
-        ImGui::SameLine();
-        ImGui::Text("counter = %d", counter);
-
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-        ImGui::End();
+        // Update the title here
+        std::string title = "Knox HAX | " + std::to_string(lastFPS) + " FPS";  // Create title with FPS
+        __android_log_print(ANDROID_LOG_INFO, g_LogTag, "Updated Title: %s", title.c_str());
+        // You could also directly set the title in the system if needed, but this is just for logging.
     }
 
-    // 3. Show another simple window.
-    if (show_another_window)
-    {
-        ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-        ImGui::Text("Hello from another window!");
-        if (ImGui::Button("Close Me"))
-            show_another_window = false;
-        ImGui::End();
-    }
+    // Only display the window, no need to recreate it every time
+    ImGui::Begin("Knox HAX");
+
+    ImGui::Text("Hello from ImGui in Android + OpenGL ES 3!"); // Just display a simple greeting
+
+    ImGui::End();  // End the window
 
     // Rendering
     ImGui::Render();
@@ -296,88 +279,41 @@ void Shutdown()
 }
 
 // Helper functions
-
-// Unfortunately, there is no way to show the on-screen input from native code.
-// Therefore, we call ShowSoftKeyboardInput() of the main activity implemented in MainActivity.kt via JNI.
 static int ShowSoftKeyboardInput()
 {
     JavaVM* java_vm = g_App->activity->vm;
     JNIEnv* java_env = nullptr;
 
     jint jni_return = java_vm->GetEnv((void**)&java_env, JNI_VERSION_1_6);
-    if (jni_return == JNI_ERR)
-        return -1;
-
-    jni_return = java_vm->AttachCurrentThread(&java_env, nullptr);
     if (jni_return != JNI_OK)
-        return -2;
+        jni_return = java_vm->AttachCurrentThread(&java_env, nullptr);
 
-    jclass native_activity_clazz = java_env->GetObjectClass(g_App->activity->clazz);
-    if (native_activity_clazz == nullptr)
-        return -3;
+    jclass j_cls = java_env->GetObjectClass(g_App->activity->clazz);
+    jmethodID j_show_keyboard = java_env->GetMethodID(j_cls, "showSoftKeyboard", "()V");
+    java_env->CallVoidMethod(g_App->activity->clazz, j_show_keyboard);
 
-    jmethodID method_id = java_env->GetMethodID(native_activity_clazz, "showSoftInput", "()V");
-    if (method_id == nullptr)
-        return -4;
-
-    java_env->CallVoidMethod(g_App->activity->clazz, method_id);
-
-    jni_return = java_vm->DetachCurrentThread();
-    if (jni_return != JNI_OK)
-        return -5;
+    if (jni_return == JNI_OK)
+        java_vm->DetachCurrentThread();
 
     return 0;
 }
 
-// Unfortunately, the native KeyEvent implementation has no getUnicodeChar() function.
-// Therefore, we implement the processing of KeyEvents in MainActivity.kt and poll
-// the resulting Unicode characters here via JNI and send them to Dear ImGui.
 static int PollUnicodeChars()
 {
-    JavaVM* java_vm = g_App->activity->vm;
-    JNIEnv* java_env = nullptr;
-
-    jint jni_return = java_vm->GetEnv((void**)&java_env, JNI_VERSION_1_6);
-    if (jni_return == JNI_ERR)
-        return -1;
-
-    jni_return = java_vm->AttachCurrentThread(&java_env, nullptr);
-    if (jni_return != JNI_OK)
-        return -2;
-
-    jclass native_activity_clazz = java_env->GetObjectClass(g_App->activity->clazz);
-    if (native_activity_clazz == nullptr)
-        return -3;
-
-    jmethodID method_id = java_env->GetMethodID(native_activity_clazz, "pollUnicodeChar", "()I");
-    if (method_id == nullptr)
-        return -4;
-
-    // Send the actual characters to Dear ImGui
-    ImGuiIO& io = ImGui::GetIO();
-    jint unicode_character;
-    while ((unicode_character = java_env->CallIntMethod(g_App->activity->clazz, method_id)) != 0)
-        io.AddInputCharacter(unicode_character);
-
-    jni_return = java_vm->DetachCurrentThread();
-    if (jni_return != JNI_OK)
-        return -5;
-
     return 0;
 }
 
-// Helper to retrieve data placed into the assets/ directory (android/app/src/main/assets)
-static int GetAssetData(const char* filename, void** outData)
+static int GetAssetData(const char* filename, void** out_data)
 {
-    int num_bytes = 0;
-    AAsset* asset_descriptor = AAssetManager_open(g_App->activity->assetManager, filename, AASSET_MODE_BUFFER);
-    if (asset_descriptor)
-    {
-        num_bytes = AAsset_getLength(asset_descriptor);
-        *outData = IM_ALLOC(num_bytes);
-        int64_t num_bytes_read = AAsset_read(asset_descriptor, *outData, num_bytes);
-        AAsset_close(asset_descriptor);
-        IM_ASSERT(num_bytes_read == num_bytes);
-    }
-    return num_bytes;
+    AAsset* asset = AAssetManager_open(g_App->activity->assetManager, filename, AASSET_MODE_BUFFER);
+    if (asset == nullptr)
+        return 0;
+
+    off_t asset_length = AAsset_getLength(asset);
+    *out_data = malloc(asset_length);
+
+    AAsset_read(asset, *out_data, asset_length);
+    AAsset_close(asset);
+
+    return asset_length;
 }
