@@ -8,6 +8,8 @@
 #include <string>
 #include <fstream>
 
+#include <jni.h>
+
 // Global data
 static EGLDisplay g_EglDisplay = EGL_NO_DISPLAY;
 static EGLSurface g_EglSurface = EGL_NO_SURFACE;
@@ -35,7 +37,7 @@ void LogToFile(const std::string& message)
     }
 }
 
-// Function to open a URL in the default browser
+// Function to open a URL in the default browser via JNI
 void OpenURLInBrowser(const char* url)
 {
     if (g_JVM == nullptr || g_Context == nullptr)
@@ -52,26 +54,22 @@ void OpenURLInBrowser(const char* url)
     }
 
     jclass context_class = env->GetObjectClass(g_Context);
-    jmethodID method_id = env->GetMethodID(context_class, "startActivity", "(Landroid/content/Intent;)V");
+    jmethodID method_id = env->GetMethodID(context_class, "openURLInBrowser", "(Ljava/lang/String;)V");
 
     if (method_id == nullptr)
     {
-        LogToFile("OpenURLInBrowser: Failed to find startActivity method");
+        LogToFile("OpenURLInBrowser: Failed to find openURLInBrowser method");
         return;
     }
 
-    // Create an Intent to open the URL
-    jclass intent_class = env->FindClass("android/content/Intent");
-    jmethodID constructor = env->GetMethodID(intent_class, "<init>", "(Ljava/lang/String;)V");
-
+    // Convert C string to JNI string (Java string)
     jstring j_url = env->NewStringUTF(url);
-    jobject intent = env->NewObject(intent_class, constructor, j_url);
 
-    env->CallVoidMethod(g_Context, method_id, intent);
+    // Call the openURLInBrowser method
+    env->CallVoidMethod(g_Context, method_id, j_url);
 
+    // Clean up local references
     env->DeleteLocalRef(j_url);
-    env->DeleteLocalRef(intent);
-    env->DeleteLocalRef(intent_class);
     env->DeleteLocalRef(context_class);
 }
 
