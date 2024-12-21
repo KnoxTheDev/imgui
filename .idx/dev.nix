@@ -11,11 +11,15 @@
     pkgs.zip
     pkgs.unzip
     pkgs.jq
-    pkgs.python311
-    pkgs.python311Packages.pip
+    pkgs.python312
+    pkgs.python312Packages.pip
     pkgs.nodejs_20
     pkgs.nodePackages.nodemon
     pkgs.cloudflared
+    pkgs.cmake
+    pkgs.gcc
+    pkgs.libclang
+    pkgs.nano
   ];
 
   # Sets environment variables in the workspace
