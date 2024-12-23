@@ -135,6 +135,7 @@ void MainLoopStep()
 
     // Window configuration
     ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_FirstUseEver); // Set initial size
+    io.FontGlobalScale = 4.0f; // Set initial scale
     ImGui::SetNextWindowSizeConstraints(ImVec2(800, 600), ImVec2(1600, 1200)); // Set min and max window sizes
 
     // Begin main window
