@@ -16,6 +16,11 @@ static struct android_app* g_App = nullptr;
 static bool g_Initialized = false;
 static AAssetManager* g_AssetManager = nullptr;
 
+// Forward declarations
+void Init(struct android_app* app);
+void Shutdown();
+void MainLoopStep();
+
 // Helper function to log messages
 void LogMessage(const char* message)
 {
@@ -28,7 +33,7 @@ static void HandleAppCmd(struct android_app* app, int32_t appCmd)
     switch (appCmd)
     {
     case APP_CMD_INIT_WINDOW:
-        Init(app);
+        Init(app); // Now this will work as Init is forward declared
         break;
     case APP_CMD_TERM_WINDOW:
         Shutdown();
@@ -40,11 +45,6 @@ static int32_t HandleInputEvent(struct android_app* app, AInputEvent* inputEvent
 {
     return ImGui_ImplAndroid_HandleInputEvent(inputEvent);
 }
-
-// Forward declarations
-void Init(struct android_app* app);
-void Shutdown();
-void MainLoopStep();
 
 // Initialize the Android app
 void android_main(struct android_app* app)
@@ -84,7 +84,15 @@ void Init(struct android_app* app)
 
     // Initialize EGL
     g_EglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-    eglInitialize(g_EglDisplay, 0, 0);
+    if (g_EglDisplay == EGL_NO_DISPLAY) {
+        LogMessage("Error: eglGetDisplay failed.");
+        return;
+    }
+    
+    if (eglInitialize(g_EglDisplay, 0, 0) == EGL_FALSE) {
+        LogMessage("Error: eglInitialize failed.");
+        return;
+    }
 
     const EGLint egl_attributes[] = {
         EGL_BLUE_SIZE, 8,
@@ -97,14 +105,28 @@ void Init(struct android_app* app)
 
     EGLConfig egl_config;
     EGLint num_configs;
-    eglChooseConfig(g_EglDisplay, egl_attributes, &egl_config, 1, &num_configs);
+    if (eglChooseConfig(g_EglDisplay, egl_attributes, &egl_config, 1, &num_configs) == EGL_FALSE || num_configs == 0) {
+        LogMessage("Error: eglChooseConfig failed.");
+        return;
+    }
 
     g_EglSurface = eglCreateWindowSurface(g_EglDisplay, egl_config, g_App->window, nullptr);
+    if (g_EglSurface == EGL_NO_SURFACE) {
+        LogMessage("Error: eglCreateWindowSurface failed.");
+        return;
+    }
 
     const EGLint egl_context_attributes[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE };
     g_EglContext = eglCreateContext(g_EglDisplay, egl_config, EGL_NO_CONTEXT, egl_context_attributes);
+    if (g_EglContext == EGL_NO_CONTEXT) {
+        LogMessage("Error: eglCreateContext failed.");
+        return;
+    }
 
-    eglMakeCurrent(g_EglDisplay, g_EglSurface, g_EglSurface, g_EglContext);
+    if (eglMakeCurrent(g_EglDisplay, g_EglSurface, g_EglSurface, g_EglContext) == EGL_FALSE) {
+        LogMessage("Error: eglMakeCurrent failed.");
+        return;
+    }
 
     // Initialize ImGui
     IMGUI_CHECKVERSION();
@@ -229,4 +251,4 @@ void Shutdown()
     eglTerminate(g_EglDisplay);
 
     g_Initialized = false;
-}   
+}
