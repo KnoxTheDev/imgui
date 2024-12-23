@@ -125,18 +125,40 @@ void MainLoopStep()
     ImGui_ImplAndroid_NewFrame();
     ImGui::NewFrame();
 
-    // Menu settings
+    // GUI State Variables
     static bool esp_box = false, esp_skeleton = false, esp_distance = false, esp_line = false, esp_name = false;
     static bool items_banana = false, items_apple = false, items_orange = false, items_grape = false, items_peach = false;
     static bool aimbot_fake1 = false, aimbot_fake2 = false, aimbot_fake3 = false, aimbot_fake4 = false, aimbot_fake5 = false;
+    static int scale_level = 1; // Default GUI scale level
+    const char* scale_labels[] = { "1", "2", "3" }; // Scale display labels
+    static float scales[] = { 1.0f, 1.5f, 2.0f }; // Scale factors
 
     // Window configuration
     ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_FirstUseEver); // Set initial size
-    ImGui::SetNextWindowSizeConstraints(ImVec2(400, 300), ImVec2(800, 600)); // Set minimum and maximum size
-    ImGui::Begin("Thunder Mod 32 Bit", nullptr); // Remove close button
+    ImGui::SetNextWindowSizeConstraints(ImVec2(400, 300), ImVec2(800, 600)); // Set min and max window sizes
 
+    // Begin main window
+    ImGui::Begin("Thunder Mod 32 Bit", nullptr); // Main window without close button
+
+    // Tab bar for GUI sections
     if (ImGui::BeginTabBar("MenuTabs"))
     {
+        // Scale Tab
+        if (ImGui::BeginTabItem("Scale"))
+        {
+            ImGui::Text("Adjust GUI Scale:");
+
+            // Slider for scale levels
+            if (ImGui::SliderInt("Scale", &scale_level, 1, 3, scale_labels[scale_level - 1]))
+            {
+                io.FontGlobalScale = scales[scale_level - 1]; // Apply the selected scale
+            }
+
+            // Display current scale for reference
+            ImGui::Text("Current Scale: %.1f", io.FontGlobalScale);
+            ImGui::EndTabItem();
+        }
+
         // ESP Tab
         if (ImGui::BeginTabItem("ESP"))
         {
