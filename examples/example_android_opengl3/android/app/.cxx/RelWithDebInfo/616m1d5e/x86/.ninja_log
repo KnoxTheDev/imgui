@@ -12,3 +12,5 @@
 18322	18774	1734977342280989682	CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_android.cpp.o	dbb0f064e87bb5cf
 4	799	1734978143424155492	CMakeFiles/ImGuiExample.dir/main.cpp.o	3e721288e79a1fac
 800	909	1734978143539164272	../../../../build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/x86/libImGuiExample.so	5673eb89a9ada6a
+6	817	1734978951711864312	CMakeFiles/ImGuiExample.dir/main.cpp.o	3e721288e79a1fac
+817	887	1734978951790870343	../../../../build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/x86/libImGuiExample.so	5673eb89a9ada6a
