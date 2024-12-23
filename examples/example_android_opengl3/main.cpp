@@ -133,7 +133,7 @@ void MainLoopStep()
     // Window configuration
     ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_FirstUseEver); // Set initial size
     ImGui::SetNextWindowSizeConstraints(ImVec2(400, 300), ImVec2(800, 600)); // Set minimum and maximum size
-    ImGui::Begin("Thunder Mod 32 Bit", nullptr, ImGuiWindowFlags_Resizable); // Remove close button
+    ImGui::Begin("Thunder Mod 32 Bit", nullptr); // Remove close button
 
     if (ImGui::BeginTabBar("MenuTabs"))
     {
