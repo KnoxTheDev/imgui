@@ -162,11 +162,11 @@ void MainLoopStep()
     static bool aimbot_fake1 = false, aimbot_fake2 = false, aimbot_fake3 = false, aimbot_fake4 = false, aimbot_fake5 = false;
 
     // Window configuration
-    ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_FirstUseEver); // Set initial size
-    ImGui::SetNextWindowSizeConstraints(ImVec2(800, 600), ImVec2(1600, 1200)); // Set min and max window sizes
+    ImGui::SetNextWindowSize(ImVec2(600, 500), ImGuiCond_FirstUseEver); // Set initial size
+    ImGui::SetNextWindowSizeConstraints(ImVec2(600, 500), ImVec2(1200, 1000)); // Set min and max window sizes
 
     // Begin main window
-    ImGui::Begin("Thunder Mod 32 Bit", nullptr); // Main window without close button
+    ImGui::Begin("KNOXY HAX", nullptr); // Main window without close button
 
     // Tab bar for GUI sections
     if (ImGui::BeginTabBar("MenuTabs"))
