@@ -1,4 +1,3 @@
 ninja: Entering directory `/home/user/hax/examples/example_android_opengl3/android/app/.cxx/RelWithDebInfo/616m1d5e/x86'
-[1/3] Building CXX object CMakeFiles/ImGuiExample.dir/main.cpp.o
-[2/3] Building CXX object CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_widgets.cpp.o
-[3/3] Linking CXX shared library ../../../../build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/x86/libImGuiExample.so
+[1/2] Building CXX object CMakeFiles/ImGuiExample.dir/main.cpp.o
+[2/2] Linking CXX shared library ../../../../build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/x86/libImGuiExample.so
