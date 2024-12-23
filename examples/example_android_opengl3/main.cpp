@@ -84,15 +84,7 @@ void Init(struct android_app* app)
 
     // Initialize EGL
     g_EglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-    if (g_EglDisplay == EGL_NO_DISPLAY) {
-        LogMessage("Error: eglGetDisplay failed.");
-        return;
-    }
-    
-    if (eglInitialize(g_EglDisplay, 0, 0) == EGL_FALSE) {
-        LogMessage("Error: eglInitialize failed.");
-        return;
-    }
+    eglInitialize(g_EglDisplay, 0, 0);
 
     const EGLint egl_attributes[] = {
         EGL_BLUE_SIZE, 8,
@@ -105,28 +97,14 @@ void Init(struct android_app* app)
 
     EGLConfig egl_config;
     EGLint num_configs;
-    if (eglChooseConfig(g_EglDisplay, egl_attributes, &egl_config, 1, &num_configs) == EGL_FALSE || num_configs == 0) {
-        LogMessage("Error: eglChooseConfig failed.");
-        return;
-    }
+    eglChooseConfig(g_EglDisplay, egl_attributes, &egl_config, 1, &num_configs);
 
     g_EglSurface = eglCreateWindowSurface(g_EglDisplay, egl_config, g_App->window, nullptr);
-    if (g_EglSurface == EGL_NO_SURFACE) {
-        LogMessage("Error: eglCreateWindowSurface failed.");
-        return;
-    }
 
     const EGLint egl_context_attributes[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE };
     g_EglContext = eglCreateContext(g_EglDisplay, egl_config, EGL_NO_CONTEXT, egl_context_attributes);
-    if (g_EglContext == EGL_NO_CONTEXT) {
-        LogMessage("Error: eglCreateContext failed.");
-        return;
-    }
 
-    if (eglMakeCurrent(g_EglDisplay, g_EglSurface, g_EglSurface, g_EglContext) == EGL_FALSE) {
-        LogMessage("Error: eglMakeCurrent failed.");
-        return;
-    }
+    eglMakeCurrent(g_EglDisplay, g_EglSurface, g_EglSurface, g_EglContext);
 
     // Initialize ImGui
     IMGUI_CHECKVERSION();
@@ -139,20 +117,23 @@ void Init(struct android_app* app)
     // Load Roboto Regular font from assets/fonts folder
     ImGuiIO& io = ImGui::GetIO();
     io.Fonts->Clear(); // Clear the default font
+
+    // Get font data from assets
     AAsset* asset = AAssetManager_open(g_AssetManager, "fonts/Roboto-Regular.ttf", AASSET_MODE_BUFFER);
-    
+
     if (asset != nullptr)
     {
         // Get the font data from the asset
         off_t assetLength = AAsset_getLength(asset);
-        const void* fontData = AAsset_getBuffer(asset);
+        const void* fontData = AAsset_getBuffer(asset);  // fontData is const void*
 
-        // Load the font from memory buffer
-        io.Fonts->AddFontFromMemoryTTF(fontData, assetLength, 16.0f); // Set font size (e.g., 16.0f)
+        // Load the font from memory buffer (cast const void* to void*)
+        io.Fonts->AddFontFromMemoryTTF(const_cast<void*>(fontData), assetLength, 16.0f); // Set font size (e.g., 16.0f)
 
         // Optionally set this as the default font
-        io.FontDefault = io.Fonts->AddFontFromMemoryTTF(fontData, assetLength, 16.0f);
+        io.FontDefault = io.Fonts->AddFontFromMemoryTTF(const_cast<void*>(fontData), assetLength, 16.0f);
 
+        // Close the asset
         AAsset_close(asset);
     }
     else
