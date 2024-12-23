@@ -35,3 +35,5 @@
 14	13206	1734972375864828421	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui.cpp.o	1bdaf4678787562f
 7404	16354	1734972379017069120	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_widgets.cpp.o	962482460e111f82
 16354	16566	1734972379299090654	../../../../build/intermediates/cxx/Debug/5j3o4y2a/obj/arm64-v8a/libImGuiExample.so	6767b75fdd2dc7a3
+2	288	1734973103913420712	CMakeFiles/ImGuiExample.dir/main.cpp.o	246f01468f26a50
+288	413	1734973104040430410	../../../../build/intermediates/cxx/Debug/5j3o4y2a/obj/arm64-v8a/libImGuiExample.so	6767b75fdd2dc7a3

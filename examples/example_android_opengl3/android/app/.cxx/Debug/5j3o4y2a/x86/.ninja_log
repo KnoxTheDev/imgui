@@ -35,3 +35,5 @@
 7344	7766	1734972405486090243	CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_opengl3.cpp.o	94ae267b7efa986c
 4307	8478	1734972406145140567	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_widgets.cpp.o	3576723c739a5f16
 8478	8586	1734972406303152632	../../../../build/intermediates/cxx/Debug/5j3o4y2a/obj/x86/libImGuiExample.so	d5e50d31c3655805
+3	262	1734973104871493868	CMakeFiles/ImGuiExample.dir/main.cpp.o	95772fb877e8b816
+262	382	1734973105000503719	../../../../build/intermediates/cxx/Debug/5j3o4y2a/obj/x86/libImGuiExample.so	d5e50d31c3655805

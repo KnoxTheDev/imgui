@@ -1,11 +1,3 @@
 ninja: Entering directory `/home/user/hax/examples/example_android_opengl3/android/app/.cxx/RelWithDebInfo/616m1d5e/x86'
-[1/10] Building CXX object CMakeFiles/ImGuiExample.dir/main.cpp.o
-[2/10] Building CXX object CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_demo.cpp.o
-[3/10] Building CXX object CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_draw.cpp.o
-[4/10] Building CXX object CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_tables.cpp.o
-[5/10] Building C object CMakeFiles/ImGuiExample.dir/home/user/Sdk/ndk/27.2.12479018/sources/android/native_app_glue/android_native_app_glue.c.o
-[6/10] Building CXX object CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_android.cpp.o
-[7/10] Building CXX object CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_opengl3.cpp.o
-[8/10] Building CXX object CMakeFiles/ImGuiExample.dir/home/user/hax/imgui.cpp.o
-[9/10] Building CXX object CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_widgets.cpp.o
-[10/10] Linking CXX shared library ../../../../build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/x86/libImGuiExample.so
+[1/2] Building CXX object CMakeFiles/ImGuiExample.dir/main.cpp.o
+[2/2] Linking CXX shared library ../../../../build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/x86/libImGuiExample.so
