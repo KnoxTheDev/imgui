@@ -131,7 +131,7 @@ void MainLoopStep()
     static bool aimbot_fake1 = false, aimbot_fake2 = false, aimbot_fake3 = false, aimbot_fake4 = false, aimbot_fake5 = false;
     static int scale_level = 1; // Default GUI scale level
     const char* scale_labels[] = { "1", "2", "3" }; // Scale display labels
-    static float scales[] = { 1.0f, 1.5f, 2.0f }; // Scale factors
+    static float scales[] = { 6.0f, 7.5f, 8.0f }; // Scale factors
 
     // Window configuration
     ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_FirstUseEver); // Set initial size
