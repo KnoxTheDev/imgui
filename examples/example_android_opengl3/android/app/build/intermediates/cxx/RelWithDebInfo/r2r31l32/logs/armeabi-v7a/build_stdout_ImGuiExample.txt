@@ -1,7 +1,0 @@
-ninja: Entering directory `/home/user/imgui/examples/example_android_opengl3/android/app/.cxx/RelWithDebInfo/r2r31l32/armeabi-v7a'
-[1/6] Building CXX object CMakeFiles/ImGuiExample.dir/main.cpp.o
-[2/6] Building CXX object CMakeFiles/ImGuiExample.dir/home/user/imgui/imgui_tables.cpp.o
-[3/6] Building CXX object CMakeFiles/ImGuiExample.dir/home/user/imgui/imgui_draw.cpp.o
-[4/6] Building CXX object CMakeFiles/ImGuiExample.dir/home/user/imgui/imgui_widgets.cpp.o
-[5/6] Building CXX object CMakeFiles/ImGuiExample.dir/home/user/imgui/imgui.cpp.o
-[6/6] Linking CXX shared library ../../../../build/intermediates/cxx/RelWithDebInfo/r2r31l32/obj/armeabi-v7a/libImGuiExample.so
