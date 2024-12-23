@@ -6,9 +6,6 @@
 #include <EGL/egl.h>
 #include <GLES3/gl3.h>
 #include <string>
-#include <fstream>
-
-#include <jni.h>
 
 // Global data
 static EGLDisplay g_EglDisplay = EGL_NO_DISPLAY;
@@ -16,17 +13,11 @@ static EGLSurface g_EglSurface = EGL_NO_SURFACE;
 static EGLContext g_EglContext = EGL_NO_CONTEXT;
 static struct android_app* g_App = nullptr;
 static bool g_Initialized = false;
-static std::string g_IniFilename = "";
-static const char* g_LogTag = "ThunderModExample";
-static std::ofstream logFile;
 
-// Helper function to log to a file
-void LogToFile(const std::string& message)
+// Helper function to log messages
+void LogMessage(const char* message)
 {
-    if (logFile.is_open())
-    {
-        logFile << message << std::endl;
-    }
+    __android_log_print(ANDROID_LOG_INFO, "ThunderMod", "%s", message);
 }
 
 // Forward declarations
@@ -60,14 +51,6 @@ void android_main(struct android_app* app)
     app->onAppCmd = HandleAppCmd;
     app->onInputEvent = HandleInputEvent;
 
-    // Open log file
-    std::string logFilePath = std::string(app->activity->internalDataPath) + "/log.txt";
-    logFile.open(logFilePath, std::ios::out | std::ios::app);
-    if (logFile.is_open())
-    {
-        LogToFile("App Started");
-    }
-
     while (true)
     {
         int out_events;
@@ -95,42 +78,39 @@ void Init(struct android_app* app)
     if (g_Initialized) return;
 
     g_App = app;
-    ANativeWindow_acquire(g_App->window);
 
     // Initialize EGL
     g_EglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
     eglInitialize(g_EglDisplay, 0, 0);
-    const EGLint egl_attributes[] = { 
-        EGL_BLUE_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_RED_SIZE, 8, EGL_DEPTH_SIZE, 24, 
-        EGL_SURFACE_TYPE, EGL_WINDOW_BIT, EGL_NONE 
+
+    const EGLint egl_attributes[] = {
+        EGL_BLUE_SIZE, 8,
+        EGL_GREEN_SIZE, 8,
+        EGL_RED_SIZE, 8,
+        EGL_DEPTH_SIZE, 24,
+        EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+        EGL_NONE
     };
+
     EGLConfig egl_config;
-    EGLint num_configs = 0;
+    EGLint num_configs;
     eglChooseConfig(g_EglDisplay, egl_attributes, &egl_config, 1, &num_configs);
+
     g_EglSurface = eglCreateWindowSurface(g_EglDisplay, egl_config, g_App->window, nullptr);
+
     const EGLint egl_context_attributes[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE };
     g_EglContext = eglCreateContext(g_EglDisplay, egl_config, EGL_NO_CONTEXT, egl_context_attributes);
+
     eglMakeCurrent(g_EglDisplay, g_EglSurface, g_EglSurface, g_EglContext);
 
     // Initialize ImGui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-
-    g_IniFilename = std::string(app->activity->internalDataPath) + "/imgui.ini";
-    io.IniFilename = g_IniFilename.c_str();
-
     ImGui::StyleColorsDark();
-    ImGui::GetStyle().ScaleAllSizes(6.0f);
 
     ImGui_ImplAndroid_Init(g_App->window);
     ImGui_ImplOpenGL3_Init("#version 300 es");
 
-    ImFontConfig font_cfg;
-    font_cfg.SizePixels = 44.0f;
-    io.Fonts->AddFontDefault(&font_cfg);
-
-    LogToFile("Initialization Complete");
     g_Initialized = true;
 }
 
@@ -140,43 +120,64 @@ void MainLoopStep()
 
     ImGuiIO& io = ImGui::GetIO();
 
-    // Start a new ImGui frame
+    // Start ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplAndroid_NewFrame();
     ImGui::NewFrame();
 
-    // Thunder Mod menu
-    static bool show_menu = true;
-    if (show_menu)
-    {
-        ImGui::Begin("THUNDER MOD 32 BIT", &show_menu, ImGuiWindowFlags_AlwaysAutoResize);
-        if (ImGui::CollapsingHeader("ESP"))
-        {
-            static bool esp_line = false, esp_box = false, esp_name = false;
-            static bool esp_skeleton = false, esp_health = false, esp_teamid = false;
-            static bool esp_distance = false, esp_vehicle = false, esp_nobot = false;
+    // Menu settings
+    static bool esp_box = false, esp_skeleton = false, esp_distance = false, esp_line = false, esp_name = false;
+    static bool items_banana = false, items_apple = false, items_orange = false, items_grape = false, items_peach = false;
+    static bool aimbot_fake1 = false, aimbot_fake2 = false, aimbot_fake3 = false, aimbot_fake4 = false, aimbot_fake5 = false;
 
-            ImGui::Checkbox("Line", &esp_line);
+    // Window configuration
+    ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_FirstUseEver); // Set initial size
+    ImGui::SetNextWindowSizeConstraints(ImVec2(400, 300), ImVec2(800, 600)); // Set minimum and maximum size
+    ImGui::Begin("Thunder Mod 32 Bit", nullptr, ImGuiWindowFlags_Resizable); // Remove close button
+
+    if (ImGui::BeginTabBar("MenuTabs"))
+    {
+        // ESP Tab
+        if (ImGui::BeginTabItem("ESP"))
+        {
             ImGui::Checkbox("Box", &esp_box);
-            ImGui::Checkbox("Name", &esp_name);
             ImGui::Checkbox("Skeleton", &esp_skeleton);
-            ImGui::Checkbox("Health", &esp_health);
-            ImGui::Checkbox("Team ID", &esp_teamid);
             ImGui::Checkbox("Distance", &esp_distance);
-            ImGui::Checkbox("No Bot", &esp_nobot);
-            ImGui::Checkbox("Vehicle", &esp_vehicle);
+            ImGui::Checkbox("Line", &esp_line);
+            ImGui::Checkbox("Name", &esp_name);
+            ImGui::EndTabItem();
         }
 
-        ImGui::Text("SETTINGS");
-        ImGui::End();
+        // Items Tab
+        if (ImGui::BeginTabItem("Items"))
+        {
+            ImGui::Checkbox("Banana", &items_banana);
+            ImGui::Checkbox("Apple", &items_apple);
+            ImGui::Checkbox("Orange", &items_orange);
+            ImGui::Checkbox("Grape", &items_grape);
+            ImGui::Checkbox("Peach", &items_peach);
+            ImGui::EndTabItem();
+        }
+
+        // Aimbot Tab
+        if (ImGui::BeginTabItem("Aimbot"))
+        {
+            ImGui::Checkbox("Fake Aimbot 1", &aimbot_fake1);
+            ImGui::Checkbox("Fake Aimbot 2", &aimbot_fake2);
+            ImGui::Checkbox("Fake Aimbot 3", &aimbot_fake3);
+            ImGui::Checkbox("Fake Aimbot 4", &aimbot_fake4);
+            ImGui::Checkbox("Fake Aimbot 5", &aimbot_fake5);
+            ImGui::EndTabItem();
+        }
     }
+    ImGui::EndTabBar();
 
-    // Rendering setup
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    ImGui::End();
+
+    // Rendering
     ImGui::Render();
-
     glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-    glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+    glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
     glClear(GL_COLOR_BUFFER_BIT);
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     eglSwapBuffers(g_EglDisplay, g_EglSurface);
@@ -186,22 +187,14 @@ void Shutdown()
 {
     if (!g_Initialized) return;
 
-    LogToFile("Shutting down");
-
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplAndroid_Shutdown();
     ImGui::DestroyContext();
 
-    if (g_EglDisplay != EGL_NO_DISPLAY)
-    {
-        eglMakeCurrent(g_EglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-        if (g_EglContext != EGL_NO_CONTEXT) eglDestroyContext(g_EglDisplay, g_EglContext);
-        if (g_EglSurface != EGL_NO_SURFACE) eglDestroySurface(g_EglDisplay, g_EglSurface);
-        eglTerminate(g_EglDisplay);
-    }
+    eglMakeCurrent(g_EglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    eglDestroyContext(g_EglDisplay, g_EglContext);
+    eglDestroySurface(g_EglDisplay, g_EglSurface);
+    eglTerminate(g_EglDisplay);
 
-    ANativeWindow_release(g_App->window);
     g_Initialized = false;
-
-    LogToFile("App Shutdown");
 }
