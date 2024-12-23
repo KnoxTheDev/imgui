@@ -112,7 +112,7 @@ void Init(struct android_app* app)
     ImGui::StyleColorsDark();
 
     ImGui_ImplAndroid_Init(g_App->window);
-    ImGui_ImplOpenGL3_Init("#version 300");
+    ImGui_ImplOpenGL3_Init("#version 300 es");
 
     // Load Roboto Regular font from assets/fonts folder
     ImGuiIO& io = ImGui::GetIO();
