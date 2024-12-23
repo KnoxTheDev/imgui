@@ -20,6 +20,8 @@
     pkgs.gcc
     pkgs.libclang
     pkgs.nano
+    pkgs.sshx
+    pkgs.openssh
   ];
 
   # Sets environment variables in the workspace
