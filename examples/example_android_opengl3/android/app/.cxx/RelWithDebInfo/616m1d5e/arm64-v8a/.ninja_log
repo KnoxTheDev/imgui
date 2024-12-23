@@ -89,3 +89,14 @@
 983	1073	1734976830387910095	../../../../build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/arm64-v8a/libImGuiExample.so	b74354fad262a995
 6	1197	1734977094274053685	CMakeFiles/ImGuiExample.dir/main.cpp.o	196989ced23563cd
 1197	1282	1734977094365060634	../../../../build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/arm64-v8a/libImGuiExample.so	b74354fad262a995
+0	113	0	clean	555d76b7ba61da42
+73	4064	1734977279707212004	CMakeFiles/ImGuiExample.dir/main.cpp.o	196989ced23563cd
+98	10972	1734977286541733839	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_demo.cpp.o	e82b9012b5f8b0f7
+4064	15791	1734977291406105247	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_draw.cpp.o	8b539986c2b70e71
+10972	16249	1734977291875141059	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_tables.cpp.o	56779c8e7908a1db
+16250	16539	1734977292182164501	CMakeFiles/ImGuiExample.dir/home/user/Sdk/ndk/27.2.12479018/sources/android/native_app_glue/android_native_app_glue.c.o	70ab086a63ff434c
+16540	16980	1734977292627198480	CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_android.cpp.o	2a0a465516593363
+16980	17423	1734977293077232842	CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_opengl3.cpp.o	413ba1f674568665
+84	21870	1734977297375561031	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui.cpp.o	bce440c3764b32a3
+15792	24133	1734977299761743222	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_widgets.cpp.o	43ae8134e2e61ddf
+24133	24206	1734977299868751393	../../../../build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/arm64-v8a/libImGuiExample.so	b74354fad262a995
