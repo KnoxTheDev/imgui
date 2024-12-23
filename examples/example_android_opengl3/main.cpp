@@ -131,11 +131,11 @@ void MainLoopStep()
     static bool aimbot_fake1 = false, aimbot_fake2 = false, aimbot_fake3 = false, aimbot_fake4 = false, aimbot_fake5 = false;
     static int scale_level = 1; // Default GUI scale level
     const char* scale_labels[] = { "1", "2", "3" }; // Scale display labels
-    static float scales[] = { 6.0f, 7.5f, 8.0f }; // Scale factors
+    static float scales[] = { 4.0f, 4.5f, 6.0f }; // Scale factors
 
     // Window configuration
-    ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_FirstUseEver); // Set initial size
-    ImGui::SetNextWindowSizeConstraints(ImVec2(400, 300), ImVec2(800, 600)); // Set min and max window sizes
+    ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_FirstUseEver); // Set initial size
+    ImGui::SetNextWindowSizeConstraints(ImVec2(800, 600), ImVec2(1600, 1200)); // Set min and max window sizes
 
     // Begin main window
     ImGui::Begin("Thunder Mod 32 Bit", nullptr); // Main window without close button
