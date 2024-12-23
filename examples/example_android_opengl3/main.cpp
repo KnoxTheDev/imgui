@@ -5,7 +5,8 @@
 #include <android_native_app_glue.h>
 #include <EGL/egl.h>
 #include <GLES3/gl3.h>
-#include <string>
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
 
 // Global data
 static EGLDisplay g_EglDisplay = EGL_NO_DISPLAY;
@@ -13,19 +14,13 @@ static EGLSurface g_EglSurface = EGL_NO_SURFACE;
 static EGLContext g_EglContext = EGL_NO_CONTEXT;
 static struct android_app* g_App = nullptr;
 static bool g_Initialized = false;
+static AAssetManager* g_AssetManager = nullptr;
 
 // Helper function to log messages
 void LogMessage(const char* message)
 {
     __android_log_print(ANDROID_LOG_INFO, "ThunderMod", "%s", message);
 }
-
-// Forward declarations
-static void Init(struct android_app* app);
-static void Shutdown();
-static void MainLoopStep();
-static void HandleAppCmd(struct android_app* app, int32_t appCmd);
-static int32_t HandleInputEvent(struct android_app* app, AInputEvent* inputEvent);
 
 // Event handlers
 static void HandleAppCmd(struct android_app* app, int32_t appCmd)
@@ -46,10 +41,17 @@ static int32_t HandleInputEvent(struct android_app* app, AInputEvent* inputEvent
     return ImGui_ImplAndroid_HandleInputEvent(inputEvent);
 }
 
+// Forward declarations
+void Init(struct android_app* app);
+void Shutdown();
+void MainLoopStep();
+
+// Initialize the Android app
 void android_main(struct android_app* app)
 {
     app->onAppCmd = HandleAppCmd;
     app->onInputEvent = HandleInputEvent;
+    g_AssetManager = app->activity->assetManager; // Get the AssetManager
 
     while (true)
     {
@@ -73,6 +75,7 @@ void android_main(struct android_app* app)
     }
 }
 
+// Initialize EGL, ImGui, and custom font
 void Init(struct android_app* app)
 {
     if (g_Initialized) return;
@@ -111,9 +114,34 @@ void Init(struct android_app* app)
     ImGui_ImplAndroid_Init(g_App->window);
     ImGui_ImplOpenGL3_Init("#version 300 es");
 
+    // Load Roboto Regular font from assets/fonts folder
+    ImGuiIO& io = ImGui::GetIO();
+    io.Fonts->Clear(); // Clear the default font
+    AAsset* asset = AAssetManager_open(g_AssetManager, "fonts/Roboto-Regular.ttf", AASSET_MODE_BUFFER);
+    
+    if (asset != nullptr)
+    {
+        // Get the font data from the asset
+        off_t assetLength = AAsset_getLength(asset);
+        void* fontData = AAsset_getBuffer(asset);
+
+        // Load the font from memory buffer
+        io.Fonts->AddFontFromMemoryTTF(fontData, assetLength, 16.0f); // Set font size (e.g., 16.0f)
+
+        // Optionally set this as the default font
+        io.FontDefault = io.Fonts->AddFontFromMemoryTTF(fontData, assetLength, 16.0f);
+
+        AAsset_close(asset);
+    }
+    else
+    {
+        LogMessage("Error: Could not open Roboto-Regular.ttf asset.");
+    }
+
     g_Initialized = true;
 }
 
+// Main loop
 void MainLoopStep()
 {
     if (!g_Initialized) return;
@@ -129,13 +157,9 @@ void MainLoopStep()
     static bool esp_box = false, esp_skeleton = false, esp_distance = false, esp_line = false, esp_name = false;
     static bool items_banana = false, items_apple = false, items_orange = false, items_grape = false, items_peach = false;
     static bool aimbot_fake1 = false, aimbot_fake2 = false, aimbot_fake3 = false, aimbot_fake4 = false, aimbot_fake5 = false;
-    static int scale_level = 1; // Default GUI scale level
-    const char* scale_labels[] = { "1", "2", "3" }; // Scale display labels
-    static float scales[] = { 4.0f, 4.5f, 6.0f }; // Scale factors
 
     // Window configuration
     ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_FirstUseEver); // Set initial size
-    io.FontGlobalScale = 4.0f; // Set initial scale
     ImGui::SetNextWindowSizeConstraints(ImVec2(800, 600), ImVec2(1600, 1200)); // Set min and max window sizes
 
     // Begin main window
@@ -144,22 +168,6 @@ void MainLoopStep()
     // Tab bar for GUI sections
     if (ImGui::BeginTabBar("MenuTabs"))
     {
-        // Scale Tab
-        if (ImGui::BeginTabItem("Scale"))
-        {
-            ImGui::Text("Adjust GUI Scale:");
-
-            // Slider for scale levels
-            if (ImGui::SliderInt("Scale", &scale_level, 1, 3, scale_labels[scale_level - 1]))
-            {
-                io.FontGlobalScale = scales[scale_level - 1]; // Apply the selected scale
-            }
-
-            // Display current scale for reference
-            ImGui::Text("Current Scale: %.1f", io.FontGlobalScale);
-            ImGui::EndTabItem();
-        }
-
         // ESP Tab
         if (ImGui::BeginTabItem("ESP"))
         {
@@ -206,6 +214,7 @@ void MainLoopStep()
     eglSwapBuffers(g_EglDisplay, g_EglSurface);
 }
 
+// Shutdown and cleanup
 void Shutdown()
 {
     if (!g_Initialized) return;
@@ -220,4 +229,4 @@ void Shutdown()
     eglTerminate(g_EglDisplay);
 
     g_Initialized = false;
-}
+}   
