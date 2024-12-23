@@ -27,7 +27,20 @@
   },
   {
     "level_": 0,
-    "message_": "- no fingerprint file, will remove stale configuration folder",
+    "message_": "- a hard configure file changed, will remove stale configuration folder",
+    "file_": "/home/user/hax/examples/example_android_opengl3/CMakeLists.txt",
+    "tag_": "debug|arm64-v8a",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 0
+  },
+  {
+    "level_": 0,
+    "message_": "  - /home/user/hax/examples/example_android_opengl3/android/app/.cxx/Debug/5j3o4y2a/arm64-v8a/metadata_generation_command.txt (LAST_MODIFIED_CHANGED)",
     "file_": "/home/user/hax/examples/example_android_opengl3/CMakeLists.txt",
     "tag_": "debug|arm64-v8a",
     "diagnosticCode_": 0,
@@ -119,19 +132,6 @@
   {
     "level_": 0,
     "message_": "done executing cmake",
-    "file_": "/home/user/hax/examples/example_android_opengl3/CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": 0
-  },
-  {
-    "level_": 0,
-    "message_": "hard linked /home/user/hax/examples/example_android_opengl3/android/app/.cxx/Debug/5j3o4y2a/arm64-v8a/compile_commands.json to /home/user/hax/examples/example_android_opengl3/android/app/.cxx/tools/debug/arm64-v8a/compile_commands.json",
     "file_": "/home/user/hax/examples/example_android_opengl3/CMakeLists.txt",
     "tag_": "debug|arm64-v8a",
     "diagnosticCode_": 0,

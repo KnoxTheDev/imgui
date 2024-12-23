@@ -37,3 +37,6 @@
 1053	1128	1734796502773706270	../../../../build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/x86/libImGuiExample.so	5673eb89a9ada6a
 6	1365	1734960746826849647	CMakeFiles/ImGuiExample.dir/main.cpp.o	3e721288e79a1fac
 1365	1486	1734960746948858961	../../../../build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/x86/libImGuiExample.so	5673eb89a9ada6a
+3	1684	1734962523896536459	CMakeFiles/ImGuiExample.dir/main.cpp.o	3e721288e79a1fac
+3	6347	1734962528548891707	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_widgets.cpp.o	679d53e0d6e7d7
+6347	6429	1734962528650899496	../../../../build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/x86/libImGuiExample.so	5673eb89a9ada6a

@@ -1,11 +1,11 @@
 # ninja log v5
-0	6989	1734960689057438006	CMakeFiles/ImGuiExample.dir/main.cpp.o	246f01468f26a50
-19	8238	1734960690252529289	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_demo.cpp.o	19c279a27ae9a8f0
-8238	11938	1734960694029817804	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_tables.cpp.o	17ec96a5f1f0a2eb
-6995	13681	1734960695752949420	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_draw.cpp.o	f907e31c7964c7a
-13681	14150	1734960696247987232	CMakeFiles/ImGuiExample.dir/home/user/Sdk/ndk/27.2.12479018/sources/android/native_app_glue/android_native_app_glue.c.o	438be8e7a9b4713d
-8	14243	1734960696257987996	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui.cpp.o	1bdaf4678787562f
-14150	14520	1734960696628016259	CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_android.cpp.o	474ac329255ec0f1
-14243	14603	1734960696718023134	CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_opengl3.cpp.o	4064173f28a59c7a
-11938	15892	1734960697989120223	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_widgets.cpp.o	962482460e111f82
-15892	16177	1734960698289143139	../../../../build/intermediates/cxx/Debug/5j3o4y2a/obj/arm64-v8a/libImGuiExample.so	6767b75fdd2dc7a3
+0	2294	1734964094924515489	CMakeFiles/ImGuiExample.dir/main.cpp.o	246f01468f26a50
+8	2901	1734964095550563298	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_demo.cpp.o	19c279a27ae9a8f0
+2902	4544	1734964097197689082	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_tables.cpp.o	17ec96a5f1f0a2eb
+2307	5335	1734964097970748118	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_draw.cpp.o	f907e31c7964c7a
+5336	5463	1734964098127760108	CMakeFiles/ImGuiExample.dir/home/user/Sdk/ndk/27.2.12479018/sources/android/native_app_glue/android_native_app_glue.c.o	438be8e7a9b4713d
+5463	5608	1734964098272771182	CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_android.cpp.o	474ac329255ec0f1
+5609	5814	1734964098477786839	CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_opengl3.cpp.o	4064173f28a59c7a
+2	5896	1734964098522790276	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui.cpp.o	1bdaf4678787562f
+4544	7043	1734964099687879249	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_widgets.cpp.o	962482460e111f82
+7043	7127	1734964099785886733	../../../../build/intermediates/cxx/Debug/5j3o4y2a/obj/arm64-v8a/libImGuiExample.so	6767b75fdd2dc7a3
