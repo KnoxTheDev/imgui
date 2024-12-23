@@ -145,7 +145,7 @@ void Init(struct android_app* app)
     {
         // Get the font data from the asset
         off_t assetLength = AAsset_getLength(asset);
-        void* fontData = AAsset_getBuffer(asset);
+        const void* fontData = AAsset_getBuffer(asset);
 
         // Load the font from memory buffer
         io.Fonts->AddFontFromMemoryTTF(fontData, assetLength, 16.0f); // Set font size (e.g., 16.0f)
