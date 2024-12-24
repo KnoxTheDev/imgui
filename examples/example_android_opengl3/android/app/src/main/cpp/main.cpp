@@ -255,11 +255,6 @@ void MainLoopStep()
                 options.monochromeBlue();  // Switch to Monochrome Blue theme
                 themeSelection = 4;
             }
-            
-            // Font Selector using ShowFontSelector
-            ImGui::Separator();
-            ImGui::Text("Select Font:");
-            ImGui::ShowFontSelector("Fonts");
 
             ImGui::EndTabItem();
         }
