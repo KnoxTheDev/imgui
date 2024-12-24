@@ -7,6 +7,7 @@
 #include <GLES3/gl3.h>
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
+#include <jni.h> // Include for JNI functions
 
 // Global data
 static EGLDisplay g_EglDisplay = EGL_NO_DISPLAY;
@@ -20,20 +21,38 @@ static AAssetManager* g_AssetManager = nullptr;
 void Init(struct android_app* app);
 void Shutdown();
 void MainLoopStep();
+void ShowKeyboard(); // Function to show the keyboard
 
 // Helper function to log messages
-void LogMessage(const char* message)
-{
+void LogMessage(const char* message) {
     __android_log_print(ANDROID_LOG_INFO, "ThunderMod", "%s", message);
 }
 
+// JNI callback for receiving text input
+extern "C" JNIEXPORT void JNICALL 
+Java_imgui_example_android_MainActivity_onTextInput(JNIEnv* env, jclass clazz, jstring input) {
+    const char* nativeString = env->GetStringUTFChars(input, nullptr);
+    ImGui::GetIO().AddInputCharactersUTF8(nativeString);
+    env->ReleaseStringUTFChars(input, nativeString);
+}
+
+// JNI function to show the soft keyboard
+void ShowKeyboard() {
+    JNIEnv* env;
+    g_App->activity->vm->AttachCurrentThread(&env, nullptr);
+
+    jclass mainActivityClass = env->GetObjectClass(g_App->activity->clazz);
+    jmethodID showKeyboardMethod = env->GetMethodID(mainActivityClass, "showKeyboard", "()V");
+    env->CallVoidMethod(g_App->activity->clazz, showKeyboardMethod);
+
+    g_App->activity->vm->DetachCurrentThread();
+}
+
 // Event handlers
-static void HandleAppCmd(struct android_app* app, int32_t appCmd)
-{
-    switch (appCmd)
-    {
+static void HandleAppCmd(struct android_app* app, int32_t appCmd) {
+    switch (appCmd) {
     case APP_CMD_INIT_WINDOW:
-        Init(app); // Now this will work as Init is forward declared
+        Init(app);
         break;
     case APP_CMD_TERM_WINDOW:
         Shutdown();
@@ -41,30 +60,25 @@ static void HandleAppCmd(struct android_app* app, int32_t appCmd)
     }
 }
 
-static int32_t HandleInputEvent(struct android_app* app, AInputEvent* inputEvent)
-{
+static int32_t HandleInputEvent(struct android_app* app, AInputEvent* inputEvent) {
     return ImGui_ImplAndroid_HandleInputEvent(inputEvent);
 }
 
-// Initialize the Android app
-void android_main(struct android_app* app)
-{
+// Main entry point
+void android_main(struct android_app* app) {
     app->onAppCmd = HandleAppCmd;
     app->onInputEvent = HandleInputEvent;
-    g_AssetManager = app->activity->assetManager; // Get the AssetManager
+    g_AssetManager = app->activity->assetManager;
 
-    while (true)
-    {
+    while (true) {
         int out_events;
         struct android_poll_source* out_data;
 
-        while (ALooper_pollOnce(g_Initialized ? 0 : -1, nullptr, &out_events, (void**)&out_data) >= 0)
-        {
+        while (ALooper_pollOnce(g_Initialized ? 0 : -1, nullptr, &out_events, (void**)&out_data) >= 0) {
             if (out_data != nullptr)
                 out_data->process(app, out_data);
 
-            if (app->destroyRequested != 0)
-            {
+            if (app->destroyRequested != 0) {
                 if (g_Initialized)
                     Shutdown();
                 return;
@@ -75,9 +89,8 @@ void android_main(struct android_app* app)
     }
 }
 
-// Initialize EGL, ImGui, and custom font
-void Init(struct android_app* app)
-{
+// Initialize EGL, ImGui, and load fonts
+void Init(struct android_app* app) {
     if (g_Initialized) return;
 
     g_App = app;
@@ -114,39 +127,27 @@ void Init(struct android_app* app)
     ImGui_ImplAndroid_Init(g_App->window);
     ImGui_ImplOpenGL3_Init("#version 300 es");
 
-    // Load Roboto Regular font from assets/fonts folder
+    // Load font from assets
     ImGuiIO& io = ImGui::GetIO();
-    io.Fonts->Clear(); // Clear the default font
+    io.Fonts->Clear();
 
-    // Get font data from assets
     AAsset* asset = AAssetManager_open(g_AssetManager, "fonts/Roboto-Regular.ttf", AASSET_MODE_BUFFER);
 
-    if (asset != nullptr)
-    {
-        // Get the font data from the asset
+    if (asset != nullptr) {
         off_t assetLength = AAsset_getLength(asset);
-        const void* fontData = AAsset_getBuffer(asset);  // fontData is const void*
-
-        // Load the font from memory buffer (cast const void* to void*)
-        io.Fonts->AddFontFromMemoryTTF(const_cast<void*>(fontData), assetLength, 16.0f); // Set font size (e.g., 16.0f)
-
-        // Optionally set this as the default font
+        const void* fontData = AAsset_getBuffer(asset);
+        io.Fonts->AddFontFromMemoryTTF(const_cast<void*>(fontData), assetLength, 16.0f);
         io.FontDefault = io.Fonts->AddFontFromMemoryTTF(const_cast<void*>(fontData), assetLength, 16.0f);
-
-        // Close the asset
         AAsset_close(asset);
-    }
-    else
-    {
+    } else {
         LogMessage("Error: Could not open Roboto-Regular.ttf asset.");
     }
 
     g_Initialized = true;
 }
 
-// Main loop
-void MainLoopStep()
-{
+// Main loop step
+void MainLoopStep() {
     if (!g_Initialized) return;
 
     ImGuiIO& io = ImGui::GetIO();
@@ -156,57 +157,14 @@ void MainLoopStep()
     ImGui_ImplAndroid_NewFrame();
     ImGui::NewFrame();
 
-    // GUI State Variables
-    static bool esp_box = false, esp_skeleton = false, esp_distance = false, esp_line = false, esp_name = false;
-    static bool items_banana = false, items_apple = false, items_orange = false, items_grape = false, items_peach = false;
-    static bool aimbot_fake1 = false, aimbot_fake2 = false, aimbot_fake3 = false, aimbot_fake4 = false, aimbot_fake5 = false;
+    static char buffer[128] = "";
 
-    // Window configuration
-    ImGui::SetNextWindowSize(ImVec2(600, 500), ImGuiCond_FirstUseEver); // Set initial size
-    ImGui::SetNextWindowSizeConstraints(ImVec2(600, 500), ImVec2(1200, 1000)); // Set min and max window sizes
-
-    // Begin main window
-    ImGui::Begin("KNOXY HAX", nullptr); // Main window without close button
-
-    // Tab bar for GUI sections
-    if (ImGui::BeginTabBar("MenuTabs"))
-    {
-        // ESP Tab
-        if (ImGui::BeginTabItem("ESP"))
-        {
-            ImGui::Checkbox("Box", &esp_box);
-            ImGui::Checkbox("Skeleton", &esp_skeleton);
-            ImGui::Checkbox("Distance", &esp_distance);
-            ImGui::Checkbox("Line", &esp_line);
-            ImGui::Checkbox("Name", &esp_name);
-            ImGui::EndTabItem();
-        }
-
-        // Items Tab
-        if (ImGui::BeginTabItem("Items"))
-        {
-            ImGui::Checkbox("Banana", &items_banana);
-            ImGui::Checkbox("Apple", &items_apple);
-            ImGui::Checkbox("Orange", &items_orange);
-            ImGui::Checkbox("Grape", &items_grape);
-            ImGui::Checkbox("Peach", &items_peach);
-            ImGui::EndTabItem();
-        }
-
-        // Aimbot Tab
-        if (ImGui::BeginTabItem("Aimbot"))
-        {
-            ImGui::Checkbox("Fake Aimbot 1", &aimbot_fake1);
-            ImGui::Checkbox("Fake Aimbot 2", &aimbot_fake2);
-            ImGui::Checkbox("Fake Aimbot 3", &aimbot_fake3);
-            ImGui::Checkbox("Fake Aimbot 4", &aimbot_fake4);
-            ImGui::Checkbox("Fake Aimbot 5", &aimbot_fake5);
-            ImGui::EndTabItem();
+    // Input box
+    if (ImGui::InputText("Enter text", buffer, sizeof(buffer))) {
+        if (ImGui::IsItemFocused()) {
+            ShowKeyboard();
         }
     }
-    ImGui::EndTabBar();
-
-    ImGui::End();
 
     // Rendering
     ImGui::Render();
@@ -217,9 +175,8 @@ void MainLoopStep()
     eglSwapBuffers(g_EglDisplay, g_EglSurface);
 }
 
-// Shutdown and cleanup
-void Shutdown()
-{
+// Shutdown ImGui and EGL
+void Shutdown() {
     if (!g_Initialized) return;
 
     ImGui_ImplOpenGL3_Shutdown();
