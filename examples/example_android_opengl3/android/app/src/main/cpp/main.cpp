@@ -268,9 +268,11 @@ void MainLoopStep()
     // FPS window in the bottom-left corner
     {
         // Create the small window for FPS
+        ImGui::SetNextWindowPos(ImVec2(10, io.DisplaySize.y - 30), ImGuiCond_Always);  // Position at bottom-left with padding
+        ImGui::SetNextWindowSize(ImVec2(100, 30), ImGuiCond_Always);  // Small size to fit the text
 
         // FPS window without background
-        ImGui::Begin("FPS Window");
+        ImGui::Begin("FPS Window", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoScrollbar);
 
         // Display the FPS (integer only, no decimal places)
         ImGui::Text("FPS: %d", displayedFPS);
