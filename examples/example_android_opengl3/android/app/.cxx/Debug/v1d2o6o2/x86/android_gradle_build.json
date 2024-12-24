@@ -1,0 +1,40 @@
+{
+  "buildFiles": [
+    "/home/user/hax/examples/example_android_opengl3/android/app/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/user/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/home/user/hax/examples/example_android_opengl3/android/app/.cxx/Debug/v1d2o6o2/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/user/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/home/user/hax/examples/example_android_opengl3/android/app/.cxx/Debug/v1d2o6o2/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "ImGuiExample::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "x86",
+      "artifactName": "ImGuiExample",
+      "output": "/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/cxx/Debug/v1d2o6o2/obj/x86/libImGuiExample.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/home/user/Sdk/ndk/27.2.12479018/toolchains/llvm/prebuilt/linux-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/home/user/Sdk/ndk/27.2.12479018/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [
+    "c"
+  ],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

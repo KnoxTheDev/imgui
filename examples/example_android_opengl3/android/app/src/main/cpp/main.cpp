@@ -160,11 +160,6 @@ void MainLoopStep()
     ImGui_ImplAndroid_NewFrame();
     ImGui::NewFrame();
 
-    // GUI State Variables
-    static bool esp_box = false, esp_skeleton = false, esp_distance = false, esp_line = false, esp_name = false;
-    static bool items_banana = false, items_apple = false, items_orange = false, items_grape = false, items_peach = false;
-    static bool aimbot_fake1 = false, aimbot_fake2 = false, aimbot_fake3 = false, aimbot_fake4 = false, aimbot_fake5 = false;
-
     // FPS Tracking
     static float elapsedTime = 0.0f;  // Time elapsed in seconds
     static int displayedFPS = 0;       // The FPS that gets updated every second
@@ -178,90 +173,6 @@ void MainLoopStep()
         displayedFPS = static_cast<int>(io.Framerate);  // Set FPS to the current framerate
         elapsedTime = 0.0f;  // Reset the timer
     }
-
-    // Window configuration
-    ImGui::SetNextWindowSize(ImVec2(750, 400), ImGuiCond_FirstUseEver); // Set initial size
-
-    // Begin main window
-    ImGui::Begin("KNOXY HAX", nullptr); // Main window without close button
-
-    // Tab bar for GUI sections
-    if (ImGui::BeginTabBar("MenuTabs"))
-    {
-        // ESP Tab
-        if (ImGui::BeginTabItem("ESP"))
-        {
-            ImGui::Checkbox("Box", &esp_box);
-            ImGui::Checkbox("Skeleton", &esp_skeleton);
-            ImGui::Checkbox("Distance", &esp_distance);
-            ImGui::Checkbox("Line", &esp_line);
-            ImGui::Checkbox("Name", &esp_name);
-            ImGui::EndTabItem();
-        }
-
-        // Items Tab
-        if (ImGui::BeginTabItem("Items"))
-        {
-            ImGui::Checkbox("Banana", &items_banana);
-            ImGui::Checkbox("Apple", &items_apple);
-            ImGui::Checkbox("Orange", &items_orange);
-            ImGui::Checkbox("Grape", &items_grape);
-            ImGui::Checkbox("Peach", &items_peach);
-            ImGui::EndTabItem();
-        }
-
-        // Aimbot Tab
-        if (ImGui::BeginTabItem("Aimbot"))
-        {
-            ImGui::Checkbox("Fake Aimbot 1", &aimbot_fake1);
-            ImGui::Checkbox("Fake Aimbot 2", &aimbot_fake2);
-            ImGui::Checkbox("Fake Aimbot 3", &aimbot_fake3);
-            ImGui::Checkbox("Fake Aimbot 4", &aimbot_fake4);
-            ImGui::Checkbox("Fake Aimbot 5", &aimbot_fake5);
-            ImGui::EndTabItem();
-        }
-
-        // Settings Tab
-        if (ImGui::BeginTabItem("Settings"))
-        {
-            // Radio buttons for theme selection (Light/Dark)
-            static int themeSelection = 0;  // 0 = Default Dark, 1 = Default Light, 2 = Adobe White, 3 = Cinder Dark
-           
-            // Use the Options class to apply the themes
-            static ImGui::Options options; // Create an instance of Options class
-
-            if (ImGui::RadioButton("Default Dark", themeSelection == 0)) 
-            {
-                ImGui::StyleColorsDark();  // Switch to Default Dark theme
-                themeSelection = 0;
-            }
-            if (ImGui::RadioButton("Default Light", themeSelection == 1)) 
-            {
-                ImGui::StyleColorsLight();  // Switch to Default Light theme
-                themeSelection = 1;
-            }
-            if (ImGui::RadioButton("Default Classic", themeSelection == 2)) 
-            {
-                ImGui::StyleColorsClassic();  // Switch to Default Classic theme
-                themeSelection = 2;
-            }
-            if (ImGui::RadioButton("Cinder Dark", themeSelection == 3)) 
-            {
-                options.cinderDark();  // Switch to Cinder Dark theme
-                themeSelection = 3;
-            }
-            if (ImGui::RadioButton("Monochrome Blue", themeSelection == 4)) 
-            {
-                options.monochromeBlue();  // Switch to Monochrome Blue theme
-                themeSelection = 4;
-            }
-
-            ImGui::EndTabItem();
-        }
-    }
-    ImGui::EndTabBar();
-
-    ImGui::End();
 
     // FPS window in the bottom-left corner
     {
