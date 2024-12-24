@@ -15,6 +15,7 @@ static EGLContext g_EglContext = EGL_NO_CONTEXT;
 static struct android_app* g_App = nullptr;
 static bool g_Initialized = false;
 static AAssetManager* g_AssetManager = nullptr;
+float g_ScaleFactor = 1.0f; // Initial scale factor (1.0 = 100% scale)
 
 // Forward declarations
 void Init(struct android_app* app);
@@ -144,12 +145,15 @@ void Init(struct android_app* app)
     g_Initialized = true;
 }
 
-// Main loop
 void MainLoopStep()
 {
     if (!g_Initialized) return;
 
     ImGuiIO& io = ImGui::GetIO();
+
+    // Apply the scale factor to all GUI elements
+    ImGui::GetIO().FontGlobalScale = g_ScaleFactor;  // Scale fonts
+    ImGui::GetStyle().ScaleAllSizes(g_ScaleFactor);   // Scale UI element sizes (buttons, windows, etc.)
 
     // Start ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
@@ -215,6 +219,37 @@ void MainLoopStep()
             ImGui::Checkbox("Fake Aimbot 3", &aimbot_fake3);
             ImGui::Checkbox("Fake Aimbot 4", &aimbot_fake4);
             ImGui::Checkbox("Fake Aimbot 5", &aimbot_fake5);
+            ImGui::EndTabItem();
+        }
+
+        // Settings Tab
+        if (ImGui::BeginTabItem("Settings"))
+        {
+            // Radio buttons for theme selection (Light/Dark)
+            static int themeSelection = 0;  // 0 = Dark, 1 = Light
+            if (ImGui::RadioButton("Dark Theme", themeSelection == 0)) 
+            {
+                ImGui::StyleColorsDark();  // Switch to Dark theme
+                themeSelection = 0;
+            }
+            if (ImGui::RadioButton("Light Theme", themeSelection == 1)) 
+            {
+                ImGui::StyleColorsLight();  // Switch to Light theme
+                themeSelection = 1;
+            }
+
+            // Define the float scale options
+            const float scaleOptions[] = { 0.25f, 0.5f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f };
+
+            // Variable to hold the current index of the selected scale factor
+            int currentSelection = 2; // Default to 1.0 (index 2)
+
+            // Create the slider that uses integer indices
+            if (ImGui::SliderInt("Scale Factor", &currentSelection, 0, IM_ARRAYSIZE(scaleOptions) - 1)) {
+                // Update g_ScaleFactor using the selected float value
+                g_ScaleFactor = scaleOptions[currentSelection];
+            }
+
             ImGui::EndTabItem();
         }
     }
