@@ -208,6 +208,23 @@ void MainLoopStep()
 
     ImGui::End();
 
+    // FPS window in the bottom-left corner
+    {
+        // Get the FPS value directly from ImGui IO
+        int fps = static_cast<int>(io.Framerate);  // Fetch FPS from ImGui
+
+        // Create the small window for FPS
+        ImGui::SetNextWindowPos(ImVec2(10, io.DisplaySize.y - 30), ImGuiCond_Always);  // Position at bottom-left with padding
+        ImGui::SetNextWindowSize(ImVec2(100, 30), ImGuiCond_Always);  // Small size to fit the text
+
+        ImGui::Begin("FPS Window", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs);
+
+        // Display the FPS (integer only, no decimal places)
+        ImGui::Text("FPS: %d", fps);
+
+        ImGui::End();
+    }
+
     // Rendering
     ImGui::Render();
     glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
