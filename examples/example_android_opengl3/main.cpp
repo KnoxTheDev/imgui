@@ -3,25 +3,29 @@
 #include "imgui_impl_opengl3.h"
 #include <android/log.h>
 #include <android_native_app_glue.h>
+#include <jni.h>
 #include <EGL/egl.h>
 #include <GLES3/gl3.h>
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
-#include <jni.h> // Include for JNI functions
+#include <string>
+#include <cstring>
 
-// Global data
+// Global variables
 static EGLDisplay g_EglDisplay = EGL_NO_DISPLAY;
 static EGLSurface g_EglSurface = EGL_NO_SURFACE;
 static EGLContext g_EglContext = EGL_NO_CONTEXT;
 static struct android_app* g_App = nullptr;
 static bool g_Initialized = false;
 static AAssetManager* g_AssetManager = nullptr;
+static std::string g_TextInputBuffer; // Buffer to store text input
 
 // Forward declarations
 void Init(struct android_app* app);
 void Shutdown();
 void MainLoopStep();
-void ShowKeyboard(); // Function to show the keyboard
+void ShowKeyboard();
+void HideKeyboard();
 
 // Helper function to log messages
 void LogMessage(const char* message) {
@@ -29,10 +33,10 @@ void LogMessage(const char* message) {
 }
 
 // JNI callback for receiving text input
-extern "C" JNIEXPORT void JNICALL 
+extern "C" JNIEXPORT void JNICALL
 Java_imgui_example_android_MainActivity_onTextInput(JNIEnv* env, jclass clazz, jstring input) {
     const char* nativeString = env->GetStringUTFChars(input, nullptr);
-    ImGui::GetIO().AddInputCharactersUTF8(nativeString);
+    g_TextInputBuffer += nativeString; // Append new input to the buffer
     env->ReleaseStringUTFChars(input, nativeString);
 }
 
@@ -48,15 +52,27 @@ void ShowKeyboard() {
     g_App->activity->vm->DetachCurrentThread();
 }
 
+// JNI function to hide the soft keyboard
+void HideKeyboard() {
+    JNIEnv* env;
+    g_App->activity->vm->AttachCurrentThread(&env, nullptr);
+
+    jclass mainActivityClass = env->GetObjectClass(g_App->activity->clazz);
+    jmethodID hideKeyboardMethod = env->GetMethodID(mainActivityClass, "hideKeyboard", "()V");
+    env->CallVoidMethod(g_App->activity->clazz, hideKeyboardMethod);
+
+    g_App->activity->vm->DetachCurrentThread();
+}
+
 // Event handlers
 static void HandleAppCmd(struct android_app* app, int32_t appCmd) {
     switch (appCmd) {
-    case APP_CMD_INIT_WINDOW:
-        Init(app);
-        break;
-    case APP_CMD_TERM_WINDOW:
-        Shutdown();
-        break;
+        case APP_CMD_INIT_WINDOW:
+            Init(app);
+            break;
+        case APP_CMD_TERM_WINDOW:
+            Shutdown();
+            break;
     }
 }
 
@@ -89,7 +105,7 @@ void android_main(struct android_app* app) {
     }
 }
 
-// Initialize EGL, ImGui, and load fonts
+// Initialize EGL, ImGui, and custom fonts
 void Init(struct android_app* app) {
     if (g_Initialized) return;
 
@@ -127,7 +143,7 @@ void Init(struct android_app* app) {
     ImGui_ImplAndroid_Init(g_App->window);
     ImGui_ImplOpenGL3_Init("#version 300 es");
 
-    // Load font from assets
+    // Load custom fonts
     ImGuiIO& io = ImGui::GetIO();
     io.Fonts->Clear();
 
@@ -159,11 +175,17 @@ void MainLoopStep() {
 
     static char buffer[128] = "";
 
-    // Input box
-    if (ImGui::InputText("Enter text", buffer, sizeof(buffer))) {
+    // Text input box
+    if (ImGui::InputText("Input Text", buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue)) {
         if (ImGui::IsItemFocused()) {
             ShowKeyboard();
         }
+    }
+
+    // Append JNI-provided input to the buffer
+    if (!g_TextInputBuffer.empty()) {
+        strncat(buffer, g_TextInputBuffer.c_str(), sizeof(buffer) - strlen(buffer) - 1);
+        g_TextInputBuffer.clear(); // Clear the buffer after appending
     }
 
     // Rendering
@@ -175,7 +197,7 @@ void MainLoopStep() {
     eglSwapBuffers(g_EglDisplay, g_EglSurface);
 }
 
-// Shutdown ImGui and EGL
+// Shutdown EGL and ImGui
 void Shutdown() {
     if (!g_Initialized) return;
 
