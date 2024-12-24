@@ -1,50 +1,73 @@
 package imgui.example.android
 
 import android.app.NativeActivity
-import android.os.Bundle
 import android.content.Context
+import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.view.KeyEvent
+import android.view.View
 import java.util.concurrent.LinkedBlockingQueue
 
 /**
  * MainActivity class for the Android example.
  */
 class MainActivity : NativeActivity() {
+    companion object {
+        init {
+            System.loadLibrary("ImGUIExample") // Replace with your native library name
+        }
+
+        /**
+         * Native method to handle text input. Called from Java when input is captured.
+         */
+        @JvmStatic
+        external fun onTextInput(input: String)
+    }
+
     private val unicodeCharacterQueue: LinkedBlockingQueue<Int> = LinkedBlockingQueue()
 
     /**
-     * Shows the soft input keyboard.
+     * Displays the software keyboard.
      */
-    fun showSoftInput() {
-        (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-        .showSoftInput(window.decorView, 0)
+    fun showKeyboard() {
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(window.decorView, InputMethodManager.SHOW_IMPLICIT)
     }
 
     /**
-     * Hides the soft input keyboard.
+     * Hides the software keyboard.
      */
-    fun hideSoftInput() {
-        (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-        .hideSoftInputFromWindow(window.decorView.windowToken, 0)
+    fun hideKeyboard() {
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(window.decorView.windowToken, 0)
     }
 
     /**
-     * Polls the next Unicode character from the queue.
-     * @return The next Unicode character, or 0 if the queue is empty.
+     * Captures key events and queues Unicode characters for JNI processing.
      */
-    fun pollUnicodeChar() = unicodeCharacterQueue.poll() ?: 0
-
-    /**
-     * Dispatches a key event.
-     * @param event The key event to dispatch.
-     * @return True if the event was handled, false otherwise.
-     */
-    override fun dispatchKeyEvent(event: KeyEvent): Boolean =
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (event.action == KeyEvent.ACTION_DOWN) {
-            unicodeCharacterQueue.offer(event.getUnicodeChar(event.metaState))
-            super.dispatchKeyEvent(event)
-        } else {
-            super.dispatchKeyEvent(event)
+            val unicodeChar = event.getUnicodeChar(event.metaState)
+            unicodeCharacterQueue.offer(unicodeChar)
+
+            // Send input text to native code if it's printable
+            if (unicodeChar != 0) {
+                onTextInput(unicodeChar.toChar().toString())
+            }
+        }
+        return super.dispatchKeyEvent(event)
+    }
+
+    /**
+     * Optional lifecycle handling if needed.
+     */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Additional setup if required
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Cleanup if needed
     }
 }
