@@ -17,3 +17,8 @@
 88	156	1735033991937002744	/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/cxx/RelWithDebInfo/341b2r1z/obj/x86_64/libImGuiExample.so	1a5ff68d7f3f46bf
 3	118	1735034204882135267	CMakeFiles/ImGuiExample.dir/themes.cpp.o	9c52ba5c82ba70ea
 118	192	1735034204952141886	/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/cxx/RelWithDebInfo/341b2r1z/obj/x86_64/libImGuiExample.so	1a5ff68d7f3f46bf
+3	152	1735034581882778076	CMakeFiles/ImGuiExample.dir/themes.cpp.o	9c52ba5c82ba70ea
+3	214	1735034581945784032	CMakeFiles/ImGuiExample.dir/main.cpp.o	3c5cd806b9d8ec92
+214	283	1735034582010790178	/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/cxx/RelWithDebInfo/341b2r1z/obj/x86_64/libImGuiExample.so	1a5ff68d7f3f46bf
+2	135	1735034721387967321	CMakeFiles/ImGuiExample.dir/main.cpp.o	3c5cd806b9d8ec92
+135	206	1735034721456973845	/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/cxx/RelWithDebInfo/341b2r1z/obj/x86_64/libImGuiExample.so	1a5ff68d7f3f46bf

@@ -242,9 +242,9 @@ void MainLoopStep()
                 ImGui::StyleColorsLight();  // Switch to Default Light theme
                 themeSelection = 1;
             }
-            if (ImGui::RadioButton("Adobe White", themeSelection == 2)) 
+            if (ImGui::RadioButton("Default Classic", themeSelection == 2)) 
             {
-                options.adobeWhite();  // Switch to Adobe White theme
+                ImGui::StyleColorsClassic();  // Switch to Default Classic theme
                 themeSelection = 2;
             }
             if (ImGui::RadioButton("Cinder Dark", themeSelection == 3)) 
