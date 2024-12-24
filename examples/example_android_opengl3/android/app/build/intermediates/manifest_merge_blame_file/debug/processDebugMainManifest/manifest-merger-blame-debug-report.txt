@@ -1,0 +1,53 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="imgui.example.android"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="34" />
+10
+11    <application
+11-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:4:5-23:19
+12        android:allowBackup="false"
+12-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:6:9-36
+13        android:debuggable="true"
+14        android:extractNativeLibs="true"
+15        android:fullBackupContent="false"
+15-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:7:9-42
+16        android:hasCode="true"
+16-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:8:9-31
+17        android:label="ImGuiExample" >
+17-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:5:9-37
+18        <activity
+18-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:10:9-22:20
+19            android:name="imgui.example.android.MainActivity"
+19-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:11:13-62
+20            android:configChanges="orientation|keyboardHidden|screenSize"
+20-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:13:13-74
+21            android:exported="true"
+21-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:14:13-36
+22            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+22-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:12:13-71
+23            <meta-data
+23-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:15:13-16:48
+24                android:name="android.app.lib_name"
+24-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:15:24-59
+25                android:value="ImGuiExample" />
+25-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:16:17-45
+26
+27            <intent-filter>
+27-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:18:13-21:29
+28                <action android:name="android.intent.action.MAIN" />
+28-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:19:17-69
+28-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:19:25-66
+29
+30                <category android:name="android.intent.category.LAUNCHER" />
+30-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:20:17-77
+30-->/home/user/hax/examples/example_android_opengl3/android/app/src/main/AndroidManifest.xml:20:27-74
+31            </intent-filter>
+32        </activity>
+33    </application>
+34
+35</manifest>
