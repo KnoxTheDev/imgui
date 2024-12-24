@@ -16,6 +16,7 @@ static EGLContext g_EglContext = EGL_NO_CONTEXT;
 static struct android_app* g_App = nullptr;
 static bool g_Initialized = false;
 static AAssetManager* g_AssetManager = nullptr;
+float g_ScaleFactor = 2.5f; // Initial scale factor (1.0 = 100% scale)
 
 // Forward declarations
 void Init(struct android_app* app);
@@ -151,6 +152,9 @@ void MainLoopStep()
 
     ImGuiIO& io = ImGui::GetIO();
 
+    // Apply the scale factor to all GUI elements
+    ImGui::GetStyle().ScaleAllSizes(g_ScaleFactor);   // Scale UI element sizes (buttons, windows, etc.)
+
     // Start ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplAndroid_NewFrame();
@@ -176,7 +180,7 @@ void MainLoopStep()
     }
 
     // Window configuration
-    ImGui::SetNextWindowSize(ImVec2(562, 400), ImGuiCond_FirstUseEver); // Set initial size
+    ImGui::SetNextWindowSize(ImVec2(750, 400), ImGuiCond_FirstUseEver); // Set initial size
 
     // Begin main window
     ImGui::Begin("KNOXY HAX", nullptr); // Main window without close button
