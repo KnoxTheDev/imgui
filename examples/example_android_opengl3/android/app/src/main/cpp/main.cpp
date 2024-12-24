@@ -268,8 +268,6 @@ void MainLoopStep()
     // FPS window in the bottom-left corner
     {
         // Create the small window for FPS
-        ImGui::SetNextWindowPos(ImVec2(10, io.DisplaySize.y - 30), ImGuiCond_Always);  // Position at bottom-left with padding
-        ImGui::SetNextWindowSize(ImVec2(100, 30), ImGuiCond_Always);  // Small size to fit the text
 
         // FPS window without background
         ImGui::Begin("FPS Window");
