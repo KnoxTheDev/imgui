@@ -252,6 +252,11 @@ void MainLoopStep()
                 options.cinderDark();  // Switch to Cinder Dark theme
                 themeSelection = 3;
             }
+            if (ImGui::RadioButton("Monochrome Blue", themeSelection == 4)) 
+            {
+                options.monochromeBlue();  // Switch to Monochrome Blue theme
+                themeSelection = 4;
+            }
 
             ImGui::EndTabItem();
         }

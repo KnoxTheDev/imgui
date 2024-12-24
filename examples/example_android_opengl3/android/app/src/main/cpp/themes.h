@@ -7,9 +7,9 @@
 namespace ImGui {
     class Options {
     public:
-        // Apply the Cinder Dark theme (dark theme)
+        // Apply the themes
         Options& cinderDark();
-
+        Options& monochromeBlue();
     private:
         ImGuiStyle mStyle;
     };
