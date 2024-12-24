@@ -14,7 +14,7 @@ import java.util.concurrent.LinkedBlockingQueue
 class MainActivity : NativeActivity() {
     companion object {
         init {
-            System.loadLibrary("ImGUIExample") // Replace with your native library name
+            System.loadLibrary("ImGuiExample") // Replace with your native library name
         }
 
         /**
