@@ -1,4 +1,4 @@
-#Mon Dec 23 18:35:53 UTC 2024
+#Tue Dec 24 05:02:44 UTC 2024
 base.0=/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/dex/release/mergeDexRelease/classes.dex
 path.0=classes.dex
 renamed.0=classes.dex
