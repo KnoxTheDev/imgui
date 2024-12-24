@@ -124,17 +124,8 @@ void Init(struct android_app* app)
     const char* fontFiles[] = {
         "fonts/Arial.ttf",
         "fonts/Roboto-Bold.ttf",
-        "fonts/Roboto-MediumItalic.ttf",
-        "fonts/Roboto-Thin.ttf",
-        "fonts/Roboto-BlackItalic.ttf",
-        "fonts/Roboto-Italic.ttf",
-        "fonts/Roboto-Medium.ttf",
         "fonts/Roboto-Black.ttf",
-        "fonts/Roboto-LightItalic.ttf",
-        "fonts/Roboto-Regular.ttf",
-        "fonts/Roboto-BoldItalic.ttf",
-        "fonts/Roboto-Light.ttf",
-        "fonts/Roboto-ThinItalic.ttf"
+        "fonts/Roboto-Regular.ttf"
     };
 
     // Loop through the font files and load them dynamically
