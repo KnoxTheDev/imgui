@@ -272,7 +272,7 @@ void MainLoopStep()
         ImGui::SetNextWindowSize(ImVec2(100, 30), ImGuiCond_Always);  // Small size to fit the text
 
         // FPS window without background
-        ImGui::Begin("FPS Window", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoScrollbar);
+        ImGui::Begin("FPS Window", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoScrollbar);
 
         // Display the FPS (integer only, no decimal places)
         ImGui::Text("FPS: %d", displayedFPS);
