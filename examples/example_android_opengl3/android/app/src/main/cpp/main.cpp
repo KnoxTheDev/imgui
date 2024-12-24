@@ -77,7 +77,7 @@ void android_main(struct android_app* app)
     }
 }
 
-// Initialize EGL, ImGui, and custom font
+// Initialize EGL, ImGui, and custom fonts
 void Init(struct android_app* app)
 {
     if (g_Initialized) return;
@@ -116,32 +116,51 @@ void Init(struct android_app* app)
     ImGui_ImplAndroid_Init(g_App->window);
     ImGui_ImplOpenGL3_Init("#version 300 es");
 
-    // Load Roboto Regular font from assets/fonts folder
+    // Load fonts from assets/fonts folder
     ImGuiIO& io = ImGui::GetIO();
     io.Fonts->Clear(); // Clear the default font
 
-    // Get font data from assets
-    AAsset* asset = AAssetManager_open(g_AssetManager, "fonts/Roboto-Regular.ttf", AASSET_MODE_BUFFER);
+    // List of font filenames in the "assets/fonts" directory
+    const char* fontFiles[] = {
+        "fonts/Arial.ttf",
+        "fonts/Roboto-Bold.ttf",
+        "fonts/Roboto-MediumItalic.ttf",
+        "fonts/Roboto-Thin.ttf",
+        "fonts/Roboto-BlackItalic.ttf",
+        "fonts/Roboto-Italic.ttf",
+        "fonts/Roboto-Medium.ttf",
+        "fonts/Roboto-Black.ttf",
+        "fonts/Roboto-LightItalic.ttf",
+        "fonts/Roboto-Regular.ttf",
+        "fonts/Roboto-BoldItalic.ttf",
+        "fonts/Roboto-Light.ttf",
+        "fonts/Roboto-ThinItalic.ttf"
+    };
 
-    if (asset != nullptr)
+    // Loop through the font files and load them dynamically
+    for (const char* fontFile : fontFiles)
     {
-        // Get the font data from the asset
-        off_t assetLength = AAsset_getLength(asset);
-        const void* fontData = AAsset_getBuffer(asset);  // fontData is const void*
+        AAsset* asset = AAssetManager_open(g_AssetManager, fontFile, AASSET_MODE_BUFFER);
+        if (asset != nullptr)
+        {
+            off_t assetLength = AAsset_getLength(asset);
+            const void* fontData = AAsset_getBuffer(asset);
 
-        // Load the font from memory buffer (cast const void* to void*)
-        io.Fonts->AddFontFromMemoryTTF(const_cast<void*>(fontData), assetLength, 23.0f); // Set font size (e.g., 16.0f)
+            // Load the font from memory buffer with size 23.0f
+            io.Fonts->AddFontFromMemoryTTF(const_cast<void*>(fontData), assetLength, 23.0f);
 
-        // Optionally set this as the default font
-        io.FontDefault = io.Fonts->AddFontFromMemoryTTF(const_cast<void*>(fontData), assetLength, 23.0f);
-
-        // Close the asset
-        AAsset_close(asset);
+            // Close the asset
+            AAsset_close(asset);
+        }
+        else
+        {
+            LogMessage("Error: Could not open font asset.");
+        }
     }
-    else
-    {
-        LogMessage("Error: Could not open Roboto-Regular.ttf asset.");
-    }
+
+    // Optionally set the default font (can use any font loaded)
+    io.FontDefault = io.Fonts->AddFontFromMemoryTTF(const_cast<void*>(AAsset_getBuffer(AAssetManager_open(g_AssetManager, "fonts/Roboto-Regular.ttf", AASSET_MODE_BUFFER))), 
+                                                     AAsset_getLength(AAssetManager_open(g_AssetManager, "fonts/Roboto-Regular.ttf", AASSET_MODE_BUFFER)), 23.0f);
 
     g_Initialized = true;
 }
@@ -255,6 +274,11 @@ void MainLoopStep()
                 options.monochromeBlue();  // Switch to Monochrome Blue theme
                 themeSelection = 4;
             }
+            
+            // Font Selector using ShowFontSelector
+            ImGui::Separator();
+            ImGui::Text("Select Font:");
+            ImGui::ShowFontSelector("Fonts");
 
             ImGui::EndTabItem();
         }
