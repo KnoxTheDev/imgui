@@ -161,6 +161,20 @@ void MainLoopStep()
     static bool items_banana = false, items_apple = false, items_orange = false, items_grape = false, items_peach = false;
     static bool aimbot_fake1 = false, aimbot_fake2 = false, aimbot_fake3 = false, aimbot_fake4 = false, aimbot_fake5 = false;
 
+    // FPS Tracking
+    static float elapsedTime = 0.0f;  // Time elapsed in seconds
+    static int displayedFPS = 0;       // The FPS that gets updated every second
+
+    // Update elapsed time
+    elapsedTime += io.DeltaTime;
+
+    // Update FPS every 1 second
+    if (elapsedTime >= 1.0f)
+    {
+        displayedFPS = static_cast<int>(io.Framerate);  // Set FPS to the current framerate
+        elapsedTime = 0.0f;  // Reset the timer
+    }
+
     // Window configuration
     ImGui::SetNextWindowSize(ImVec2(375, 200), ImGuiCond_FirstUseEver); // Set initial size
     ImGui::SetNextWindowSizeConstraints(ImVec2(375, 200), ImVec2(750, 400)); // Set min and max window sizes
@@ -210,17 +224,15 @@ void MainLoopStep()
 
     // FPS window in the bottom-left corner
     {
-        // Get the FPS value directly from ImGui IO
-        int fps = static_cast<int>(io.Framerate);  // Fetch FPS from ImGui
-
         // Create the small window for FPS
         ImGui::SetNextWindowPos(ImVec2(10, io.DisplaySize.y - 30), ImGuiCond_Always);  // Position at bottom-left with padding
         ImGui::SetNextWindowSize(ImVec2(100, 30), ImGuiCond_Always);  // Small size to fit the text
 
-        ImGui::Begin("FPS Window", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs);
+        // FPS window without background
+        ImGui::Begin("FPS Window", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoBackground);
 
         // Display the FPS (integer only, no decimal places)
-        ImGui::Text("FPS: %d", fps);
+        ImGui::Text("FPS: %d", displayedFPS);
 
         ImGui::End();
     }
