@@ -1,1 +1,0 @@
-/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/cxx/RelWithDebInfo/616m1d5e/obj/armeabi-v7a

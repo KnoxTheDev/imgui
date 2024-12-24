@@ -1,0 +1,3 @@
+/home/user/hax/examples/example_android_opengl3/android/app/.cxx/RelWithDebInfo/341b2r1z/armeabi-v7a/CMakeFiles/ImGuiExample.dir
+/home/user/hax/examples/example_android_opengl3/android/app/.cxx/RelWithDebInfo/341b2r1z/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/user/hax/examples/example_android_opengl3/android/app/.cxx/RelWithDebInfo/341b2r1z/armeabi-v7a/CMakeFiles/rebuild_cache.dir

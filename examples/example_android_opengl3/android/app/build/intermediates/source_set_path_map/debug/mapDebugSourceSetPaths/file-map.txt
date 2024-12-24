@@ -1,7 +1,0 @@
-imgui.example.android.app-pngs-0 /home/user/hax/examples/example_android_opengl3/android/app/build/generated/res/pngs/debug
-imgui.example.android.app-resValues-1 /home/user/hax/examples/example_android_opengl3/android/app/build/generated/res/resValues/debug
-imgui.example.android.app-packageDebugResources-2 /home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/incremental/debug/packageDebugResources/merged.dir
-imgui.example.android.app-packageDebugResources-3 /home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
-imgui.example.android.app-debug-4 /home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/merged_res/debug/mergeDebugResources
-imgui.example.android.app-debug-5 /home/user/hax/examples/example_android_opengl3/android/app/src/debug/res
-imgui.example.android.app-main-6 /home/user/hax/examples/example_android_opengl3/android/app/src/main/res

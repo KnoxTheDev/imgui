@@ -1,1 +1,0 @@
-/home/user/imgui/examples/example_android_opengl3/android/app/build/intermediates/cxx/Debug/1s525o6r/obj/x86

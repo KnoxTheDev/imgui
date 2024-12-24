@@ -1,4 +1,0 @@
-/home/user/Sdk/cmake/3.22.1/bin/ninja \
-  -C \
-  /home/user/hax/examples/example_android_opengl3/android/app/.cxx/RelWithDebInfo/616m1d5e/armeabi-v7a \
-  ImGuiExample

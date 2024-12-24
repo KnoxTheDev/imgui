@@ -1,0 +1,27 @@
+{
+  "buildFiles": [
+    "/home/user/hax/examples/example_android_opengl3/android/app/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/user/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/home/user/hax/examples/example_android_opengl3/android/app/.cxx/RelWithDebInfo/341b2r1z/x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/user/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/home/user/hax/examples/example_android_opengl3/android/app/.cxx/RelWithDebInfo/341b2r1z/x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "ImGuiExample::@6890427a1f51a3e7e1df": {
+      "artifactName": "ImGuiExample",
+      "abi": "x86_64",
+      "output": "/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/cxx/RelWithDebInfo/341b2r1z/obj/x86_64/libImGuiExample.so",
+      "runtimeFiles": []
+    }
+  }
+}
