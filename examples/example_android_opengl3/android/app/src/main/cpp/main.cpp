@@ -130,10 +130,10 @@ void Init(struct android_app* app)
         const void* fontData = AAsset_getBuffer(asset);  // fontData is const void*
 
         // Load the font from memory buffer (cast const void* to void*)
-        io.Fonts->AddFontFromMemoryTTF(const_cast<void*>(fontData), assetLength, 16.0f); // Set font size (e.g., 16.0f)
+        io.Fonts->AddFontFromMemoryTTF(const_cast<void*>(fontData), assetLength, 23.0f); // Set font size (e.g., 16.0f)
 
         // Optionally set this as the default font
-        io.FontDefault = io.Fonts->AddFontFromMemoryTTF(const_cast<void*>(fontData), assetLength, 16.0f);
+        io.FontDefault = io.Fonts->AddFontFromMemoryTTF(const_cast<void*>(fontData), assetLength, 23.0f);
 
         // Close the asset
         AAsset_close(asset);
@@ -153,7 +153,6 @@ void MainLoopStep()
     ImGuiIO& io = ImGui::GetIO();
 
     // Apply the scale factor to all GUI elements
-    ImGui::GetIO().FontGlobalScale = g_ScaleFactor;  // Scale fonts
     ImGui::GetStyle().ScaleAllSizes(g_ScaleFactor);   // Scale UI element sizes (buttons, windows, etc.)
 
     // Start ImGui frame
