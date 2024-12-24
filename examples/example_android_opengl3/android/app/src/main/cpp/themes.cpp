@@ -20,23 +20,23 @@ namespace ImGui {
         mStyle.ScrollbarRounding    = 16.0f;
 
         // Set the colors for Adobe White theme
-        mStyle.Colors[ImGuiCol_Text]                  = ImVec4(0.00f, 0.00f, 0.00f, 1.00f); // Dark text for light theme
-        mStyle.Colors[ImGuiCol_TextDisabled]          = ImVec4(0.60f, 0.60f, 0.60f, 1.00f); // Disabled text
-        mStyle.Colors[ImGuiCol_WindowBg]              = ImVec4(0.95f, 0.95f, 0.95f, 1.00f); // Light background
-        mStyle.Colors[ImGuiCol_Border]                = ImVec4(0.80f, 0.80f, 0.80f, 1.00f); // Border color
-        mStyle.Colors[ImGuiCol_FrameBg]               = ImVec4(0.85f, 0.85f, 0.85f, 1.00f); // Frame background
-        mStyle.Colors[ImGuiCol_FrameBgHovered]        = ImVec4(0.80f, 0.80f, 0.80f, 0.78f); // Frame hover
-        mStyle.Colors[ImGuiCol_FrameBgActive]         = ImVec4(0.70f, 0.70f, 0.70f, 1.00f); // Frame active
-        mStyle.Colors[ImGuiCol_Button]                = ImVec4(0.24f, 0.70f, 1.00f, 1.00f); // Button color
-        mStyle.Colors[ImGuiCol_ButtonHovered]         = ImVec4(0.18f, 0.64f, 0.90f, 1.00f); // Button hover color
-        mStyle.Colors[ImGuiCol_ButtonActive]          = ImVec4(0.14f, 0.56f, 0.76f, 1.00f); // Button active color
-        mStyle.Colors[ImGuiCol_Header]                = ImVec4(0.24f, 0.70f, 1.00f, 0.76f); // Header color
-        mStyle.Colors[ImGuiCol_HeaderHovered]         = ImVec4(0.18f, 0.64f, 0.90f, 0.86f); // Header hover
-        mStyle.Colors[ImGuiCol_HeaderActive]          = ImVec4(0.14f, 0.56f, 0.76f, 1.00f); // Header active
-        mStyle.Colors[ImGuiCol_Separator]             = ImVec4(0.85f, 0.85f, 0.85f, 1.00f); // Separator
-        mStyle.Colors[ImGuiCol_SeparatorHovered]      = ImVec4(0.80f, 0.80f, 0.80f, 0.78f); // Separator hover
-        mStyle.Colors[ImGuiCol_SeparatorActive]       = ImVec4(0.70f, 0.70f, 0.70f, 1.00f); // Separator active
-        mStyle.Colors[ImGuiCol_PopupBg]               = ImVec4(1.00f, 1.00f, 1.00f, 0.9f); // Popup background
+        mStyle.Colors[ImGuiCol_Text]                  = ImColor(0x000000FF); // Dark text for light theme
+        mStyle.Colors[ImGuiCol_TextDisabled]          = ImColor(0x999999FF); // Disabled text
+        mStyle.Colors[ImGuiCol_WindowBg]              = ImColor(0xF2F2F2FF); // Light background
+        mStyle.Colors[ImGuiCol_Border]                = ImColor(0xCCCCCCFF); // Border color
+        mStyle.Colors[ImGuiCol_FrameBg]               = ImColor(0xD8D8D8FF); // Frame background
+        mStyle.Colors[ImGuiCol_FrameBgHovered]        = ImColor(0xCCCCCCFF); // Frame hover
+        mStyle.Colors[ImGuiCol_FrameBgActive]         = ImColor(0xB3B3B3FF); // Frame active
+        mStyle.Colors[ImGuiCol_Button]                = ImColor(0x3EBAFF); // Button color
+        mStyle.Colors[ImGuiCol_ButtonHovered]         = ImColor(0x2DB0E5FF); // Button hover color
+        mStyle.Colors[ImGuiCol_ButtonActive]          = ImColor(0x2391C0FF); // Button active color
+        mStyle.Colors[ImGuiCol_Header]                = ImColor(0x3EBAFF); // Header color
+        mStyle.Colors[ImGuiCol_HeaderHovered]         = ImColor(0x2DB0E5FF); // Header hover
+        mStyle.Colors[ImGuiCol_HeaderActive]          = ImColor(0x2391C0FF); // Header active
+        mStyle.Colors[ImGuiCol_Separator]             = ImColor(0xD8D8D8FF); // Separator
+        mStyle.Colors[ImGuiCol_SeparatorHovered]      = ImColor(0xCCCCCCFF); // Separator hover
+        mStyle.Colors[ImGuiCol_SeparatorActive]       = ImColor(0xB3B3B3FF); // Separator active
+        mStyle.Colors[ImGuiCol_PopupBg]               = ImColor(0xFFFFFFE6); // Popup background
 
         // Apply the custom Adobe White theme styles
         ImGui::GetStyle() = mStyle; // Apply the custom style to ImGui
