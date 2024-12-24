@@ -25,3 +25,5 @@
 2	275	1735035202628465222	CMakeFiles/ImGuiExample.dir/main.cpp.o	7b5438e2fcaacf29
 2	298	1735035202655467775	CMakeFiles/ImGuiExample.dir/themes.cpp.o	f5dcacd315388675
 298	400	1735035202750476757	/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/cxx/RelWithDebInfo/341b2r1z/obj/armeabi-v7a/libImGuiExample.so	c9c7d7a919e536ef
+2	145	1735035386554854234	CMakeFiles/ImGuiExample.dir/main.cpp.o	7b5438e2fcaacf29
+145	225	1735035386630861420	/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/cxx/RelWithDebInfo/341b2r1z/obj/armeabi-v7a/libImGuiExample.so	c9c7d7a919e536ef
