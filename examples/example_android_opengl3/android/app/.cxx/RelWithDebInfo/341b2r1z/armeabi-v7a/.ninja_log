@@ -1,12 +1,12 @@
 # ninja log v5
-7	495	1735037136573307773	CMakeFiles/ImGuiExample.dir/themes.cpp.o	f5dcacd315388675
-1	619	1735037136690318836	CMakeFiles/ImGuiExample.dir/main.cpp.o	7b5438e2fcaacf29
-496	16434	1735037152445808392	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_demo.cpp.o	2a2427c4a9a9edd2
-620	18602	1735037154632015080	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_draw.cpp.o	c7677d908ebe8782
-16435	22523	1735037158585388840	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_tables.cpp.o	2b25d2b0484de9c1
-22524	22962	1735037159034431293	CMakeFiles/ImGuiExample.dir/home/user/Sdk/ndk/27.2.12479018/sources/android/native_app_glue/android_native_app_glue.c.o	f00f0b9b1419d4a0
-22962	23390	1735037159457471288	CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_android.cpp.o	9daef6bca5688f37
-23390	23938	1735037160019524426	CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_opengl3.cpp.o	4bc51a76adb86b0d
-14	31225	1735037167219205098	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui.cpp.o	d270f3685624f27d
-18602	31460	1735037167520233558	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_widgets.cpp.o	d5d6a3018b28a94c
-31460	31534	1735037167615242540	/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/cxx/RelWithDebInfo/341b2r1z/obj/armeabi-v7a/libImGuiExample.so	c9c7d7a919e536ef
+1	326	1735040073346955384	CMakeFiles/ImGuiExample.dir/themes.cpp.o	f5dcacd315388675
+0	475	1735040073496969567	CMakeFiles/ImGuiExample.dir/main.cpp.o	7b5438e2fcaacf29
+327	14456	1735040087379282009	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_demo.cpp.o	2a2427c4a9a9edd2
+476	17651	1735040090628589200	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_draw.cpp.o	c7677d908ebe8782
+14458	21736	1735040094673971653	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_tables.cpp.o	2b25d2b0484de9c1
+21736	22619	1735040095650063934	CMakeFiles/ImGuiExample.dir/home/user/Sdk/ndk/27.2.12479018/sources/android/native_app_glue/android_native_app_glue.c.o	f00f0b9b1419d4a0
+22619	23212	1735040096234119151	CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_android.cpp.o	9daef6bca5688f37
+23213	24058	1735040097074198572	CMakeFiles/ImGuiExample.dir/home/user/hax/backends/imgui_impl_opengl3.cpp.o	4bc51a76adb86b0d
+5	33536	1735040106337074290	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui.cpp.o	d270f3685624f27d
+17651	36676	1735040109673389707	CMakeFiles/ImGuiExample.dir/home/user/hax/imgui_widgets.cpp.o	d5d6a3018b28a94c
+36677	36921	1735040109942415141	/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/cxx/RelWithDebInfo/341b2r1z/obj/armeabi-v7a/libImGuiExample.so	c9c7d7a919e536ef
