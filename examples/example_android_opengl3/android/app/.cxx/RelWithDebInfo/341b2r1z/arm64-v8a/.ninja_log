@@ -27,3 +27,5 @@
 6872	8749	1735217325711020505	/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/cxx/RelWithDebInfo/341b2r1z/obj/arm64-v8a/libImGuiExample.so	405103eb27302a1a
 5	162	1735217348197337479	CMakeFiles/ImGuiExample.dir/themes.cpp.o	598504b9b638f5ee
 162	281	1735217348299343453	/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/cxx/RelWithDebInfo/341b2r1z/obj/arm64-v8a/libImGuiExample.so	405103eb27302a1a
+5	1017	1735218202990400903	CMakeFiles/ImGuiExample.dir/main.cpp.o	3305ba1b2ee4e116
+1017	1248	1735218203214414023	/home/user/hax/examples/example_android_opengl3/android/app/build/intermediates/cxx/RelWithDebInfo/341b2r1z/obj/arm64-v8a/libImGuiExample.so	405103eb27302a1a
