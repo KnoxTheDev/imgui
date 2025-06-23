@@ -22,6 +22,28 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
+// Apply the custom "Snake Bypass" theme
+static void ApplySnakeTheme()
+{
+    ImGuiStyle& style = ImGui::GetStyle();
+    // Overall window background
+    style.Colors[ImGuiCol_WindowBg]            = ImVec4(0.12f, 0.10f, 0.08f, 0.95f);
+    // Tabs
+    style.Colors[ImGuiCol_Tab]                 = ImVec4(0.45f, 0.33f, 0.12f, 1.00f);
+    style.Colors[ImGuiCol_TabHovered]          = ImVec4(0.55f, 0.40f, 0.15f, 1.00f);
+    style.Colors[ImGuiCol_TabActive]           = ImVec4(0.65f, 0.50f, 0.20f, 1.00f);
+    style.Colors[ImGuiCol_TabUnfocused]        = style.Colors[ImGuiCol_Tab];
+    style.Colors[ImGuiCol_TabUnfocusedActive]  = style.Colors[ImGuiCol_TabActive];
+    // Buttons
+    style.Colors[ImGuiCol_Button]              = ImVec4(0.45f, 0.33f, 0.12f, 1.00f);
+    style.Colors[ImGuiCol_ButtonHovered]       = ImVec4(0.55f, 0.40f, 0.15f, 1.00f);
+    style.Colors[ImGuiCol_ButtonActive]        = ImVec4(0.65f, 0.50f, 0.20f, 1.00f);
+    // Text
+    style.Colors[ImGuiCol_Text]                = ImVec4(0.78f, 0.78f, 0.78f, 1.00f);
+    // Green accent text
+    style.Colors[ImGuiCol_TextSelectedBg]      = ImVec4(0.00f, 0.80f, 0.00f, 0.35f);
+}
+
 int main(int, char**)
 {
     // Setup GLFW
@@ -34,86 +56,80 @@ int main(int, char**)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-    // Create window
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Snake Bypass", NULL, NULL);
+    // Create GLFW window (800×640)
+    int res_w = 800, res_h = 640;
+    GLFWwindow* window = glfwCreateWindow(res_w, res_h, "Snake Bypass", NULL, NULL);
     if (!window)
         return 1;
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); // Enable vsync
+    glfwSwapInterval(1);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-    // Setup Dear ImGui style
+    // Apply custom style
     ImGui::StyleColorsDark();
+    ApplySnakeTheme();
 
     // Setup Platform/Renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    // State variables
-    int current_emulator = 0; // 0=GamLoop, 1=SmartGaGa
-    int current_version = 0;  // 0=Gl,1=Kr,2=Tw,3=Vn
-    bool bypass_done = false;
-    bool show_misc = false;
-    float wide_view = 47.0f;
-    bool no_recoil = false, no_tree = false, no_grass = false, small_cross = false;
-    bool night_mode = false, instahit = false, x_effect = false, luffy_hand = false, zero_head = false;
+    // Desired ImGui window size from reference (380×320)
+    const ImVec2 gui_size = ImVec2(380, 320);
+    const ImVec2 gui_pos  = ImVec2((res_w - gui_size.x) * 0.5f,
+                                  (res_h - gui_size.y) * 0.5f);
+
+    // State variables (unique IDs via labels)
+    int emu = 0, ver = 0;
+    bool done = false;
+    float wide = 47.0f;
+    bool r_no = false, t_no = false, g_no = false, cross_small = false;
+    bool night = false, insta = false, xfx = false, luffy = false, zero = false;
 
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // Main "Snake Bypass" window
-        ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(gui_size, ImGuiCond_Once);
+        ImGui::SetNextWindowPos(gui_pos, ImGuiCond_Once);
         if (ImGui::Begin("SNAKE BYPASS", NULL, ImGuiWindowFlags_NoCollapse))
         {
-            if (ImGui::BeginTabBar("MainTabs"))
+            if (ImGui::BeginTabBar("Tabs##Snake"))
             {
                 if (ImGui::BeginTabItem("BYPASS"))
                 {
                     ImGui::TextColored(ImVec4(0,1,0,1), "Welcome to SNAKE PRIVATE BYPASS");
                     ImGui::Spacing();
-                    ImGui::Text("Select Your Emulator :");
-                    ImGui::RadioButton("GAMLOOP 7.1", &current_emulator, 0); ImGui::SameLine();
-                    ImGui::RadioButton("SMARTGAGA", &current_emulator, 1);
+
+                    ImGui::Text("SELECT YOUR EMULATOR :");
+                    ImGui::RadioButton("GAMLOOP 7.1##emu", &emu, 0); ImGui::SameLine();
+                    ImGui::RadioButton("SMARTGAGA##emu", &emu, 1);
 
                     ImGui::Spacing();
-                    ImGui::Text("Select Your Game Version :");
-                    ImGui::RadioButton("Gl", &current_version, 0); ImGui::SameLine();
-                    ImGui::RadioButton("Kr", &current_version, 1); ImGui::SameLine();
-                    ImGui::RadioButton("Tw", &current_version, 2); ImGui::SameLine();
-                    ImGui::RadioButton("Vn", &current_version, 3);
+                    ImGui::Text("SELECT YOUR GAME VERSION :");
+                    ImGui::RadioButton("Gl##ver", &ver, 0); ImGui::SameLine();
+                    ImGui::RadioButton("Kr##ver", &ver, 1); ImGui::SameLine();
+                    ImGui::RadioButton("Tw##ver", &ver, 2); ImGui::SameLine();
+                    ImGui::RadioButton("Vn##ver", &ver, 3);
 
                     ImGui::Spacing();
-                    if (ImGui::Button("BYPASS EMULATOR", ImVec2(-1, 0)))
-                    {
-                        // TODO: trigger bypass logic
-                        bypass_done = true;
-                    }
-                    if (ImGui::Button("SAFE EXIT", ImVec2(-1, 0)))
-                    {
-                        glfwSetWindowShouldClose(window, GLFW_TRUE);
-                    }
-                    if (ImGui::Button("REST GUEST", ImVec2(-1, 0)))
-                    {
-                        // TODO: reset guest logic
-                        bypass_done = false;
-                    }
+                    if (ImGui::Button("BYPASS EMULATOR")) { done = true; }
+                    if (ImGui::Button("SAFE EXIT"))     { glfwSetWindowShouldClose(window, GLFW_TRUE); }
+                    if (ImGui::Button("REST GUEST"))    { done = false; }
 
-                    if (bypass_done)
-                    {
+                    if (done)
                         ImGui::TextColored(ImVec4(0,1,0,1), "BYPASS DONE SUCCESSFUL");
-                    }
+
                     ImGui::EndTabItem();
                 }
+
                 if (ImGui::BeginTabItem("MISC"))
                 {
                     ImGui::TextColored(ImVec4(0,1,0,1), "SNAKE PRIVATE BYPASS");
@@ -121,20 +137,20 @@ int main(int, char**)
                     ImGui::Text("Memory Hacks");
                     ImGui::Spacing();
 
-                    ImGui::Checkbox("Wide View", &show_misc); ImGui::SameLine();
-                    ImGui::SliderFloat("", &wide_view, 0.0f, 100.0f, "%.0f"); ImGui::SameLine();
-                    ImGui::Text("%.0f", wide_view);
+                    ImGui::SliderFloat("Wide View##wide", &wide, 0.0f, 100.0f, "%.0f");
+                    ImGui::Spacing();
 
-                    ImGui::Checkbox("No Recoil", &no_recoil); ImGui::SameLine();
-                    ImGui::Checkbox("No Tree", &no_tree); ImGui::SameLine();
-                    ImGui::Checkbox("No Grass", &no_grass); ImGui::SameLine();
-                    ImGui::Checkbox("Small Crosshair", &small_cross);
+                    ImGui::Checkbox("No Recoil##no", &r_no); ImGui::SameLine();
+                    ImGui::Checkbox("No Tree##no", &t_no);  ImGui::SameLine();
+                    ImGui::Checkbox("No Grass##no", &g_no); ImGui::SameLine();
+                    ImGui::Checkbox("Small Crosshair##cross", &cross_small);
 
-                    ImGui::Checkbox("Night Mode", &night_mode); ImGui::SameLine();
-                    ImGui::Checkbox("InstaHit", &instahit); ImGui::SameLine();
-                    ImGui::Checkbox("X-Effect", &x_effect); ImGui::SameLine();
-                    ImGui::Checkbox("LUFFY-HAND", &luffy_hand);
-                    ImGui::Checkbox("ZeroHead", &zero_head);
+                    ImGui::Spacing();
+                    ImGui::Checkbox("Night Mode##nm", &night);   ImGui::SameLine();
+                    ImGui::Checkbox("InstaHit##ih", &insta);    ImGui::SameLine();
+                    ImGui::Checkbox("X-Effect##xf", &xfx);      ImGui::SameLine();
+                    ImGui::Checkbox("LUFFY-HAND##lf", &luffy);
+                    ImGui::Checkbox("ZeroHead##zh", &zero);
 
                     ImGui::EndTabItem();
                 }
@@ -143,11 +159,10 @@ int main(int, char**)
         }
         ImGui::End();
 
-        // Rendering
         ImGui::Render();
-        int display_w, display_h;
-        glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
+        int w, h;
+        glfwGetFramebufferSize(window, &w, &h);
+        glViewport(0, 0, w, h);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
