@@ -46,9 +46,6 @@ static void ApplySnakeTheme()
     style.Colors[ImGuiCol_TitleBgActive]    = color1;
     style.Colors[ImGuiCol_TitleBgCollapsed] = color1;
 
-    style.Colors[ImGuiCol_Border]        = color1;
-    style.Colors[ImGuiCol_BorderShadow]  = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-
     style.Colors[ImGuiCol_Button]        = color2;
     style.Colors[ImGuiCol_ButtonHovered] = ImVec4(140.0f/255.0f, 100.0f/255.0f, 45.0f/255.0f, 1.00f);
     style.Colors[ImGuiCol_ButtonActive]  = ImVec4(150.0f/255.0f, 110.0f/255.0f, 50.0f/255.0f, 1.00f);
@@ -62,6 +59,8 @@ static void ApplySnakeTheme()
     style.Colors[ImGuiCol_FrameBgActive]  = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
 
     style.Colors[ImGuiCol_Separator]      = ImVec4(0.45f, 0.40f, 0.40f, 0.50f);
+
+    style.Colors[ImGuiCol_CheckMark] = tab_focused;
 
     style.FrameRounding      = 3.0f;
     style.GrabRounding       = 3.0f;
@@ -102,7 +101,7 @@ int main(int, char**)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    const ImVec2 gui_size = ImVec2(450, 320);
+    const ImVec2 gui_size = ImVec2(445, 320);
     const ImVec2 gui_pos  = ImVec2((res_w - gui_size.x) * 0.5f,
                                   (res_h - gui_size.y) * 0.5f);
 
@@ -122,7 +121,8 @@ int main(int, char**)
 
         ImGui::SetNextWindowSize(gui_size, ImGuiCond_Once);
         ImGui::SetNextWindowPos(gui_pos, ImGuiCond_Once);
-        if (ImGui::Begin("SNAKE BYPASS", NULL, ImGuiWindowFlags_NoCollapse))
+        static bool show_main_window = true;
+        if (ImGui::Begin("SNAKE BYPASS", &show_main_window))
         {
             if (ImGui::BeginTabBar("Tabs##Snake"))
             {
@@ -183,7 +183,8 @@ int main(int, char**)
             }
         }
         ImGui::End();
-
+        if (!show_main_window)
+            glfwSetWindowShouldClose(window, GLFW_TRUE);
         ImGui::Render();
         int w, h; glfwGetFramebufferSize(window, &w, &h);
         glViewport(0, 0, w, h);
