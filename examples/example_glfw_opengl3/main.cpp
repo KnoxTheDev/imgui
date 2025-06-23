@@ -25,7 +25,7 @@ static void ApplySnakeTheme()
 {
     ImGuiStyle& style = ImGui::GetStyle();
 
-    style.Colors[ImGuiCol_WindowBg]            = ImVec4(0.10f, 0.10f, 0.10f, 0.95f);
+    style.Colors[ImGuiCol_WindowBg]            = ImVec4(0.02f, 0.02f, 0.02f, 0.95f); // VS Code black high contrast
     style.Colors[ImGuiCol_Header]              = ImVec4(0.66f, 0.44f, 0.04f, 1.00f);
     style.Colors[ImGuiCol_HeaderHovered]       = ImVec4(0.75f, 0.55f, 0.06f, 1.00f);
     style.Colors[ImGuiCol_HeaderActive]        = ImVec4(0.80f, 0.60f, 0.10f, 1.00f);
@@ -35,6 +35,11 @@ static void ApplySnakeTheme()
     style.Colors[ImGuiCol_TabActive]           = ImVec4(0.80f, 0.60f, 0.10f, 1.00f);
     style.Colors[ImGuiCol_TabUnfocused]        = ImVec4(0.50f, 0.35f, 0.03f, 1.00f);
     style.Colors[ImGuiCol_TabUnfocusedActive]  = style.Colors[ImGuiCol_TabActive];
+
+    style.Colors[ImGuiCol_TitleBg]             = ImVec4(0.10f, 0.07f, 0.02f, 1.00f); // Dark golden
+    style.Colors[ImGuiCol_TitleBgActive]       = ImVec4(0.15f, 0.10f, 0.03f, 1.00f);
+    style.Colors[ImGuiCol_TitleBgCollapsed]    = ImVec4(0.08f, 0.06f, 0.01f, 1.00f);
+
     style.Colors[ImGuiCol_Border]              = ImVec4(0.80f, 0.60f, 0.10f, 0.5f);
     style.Colors[ImGuiCol_BorderShadow]        = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
 
