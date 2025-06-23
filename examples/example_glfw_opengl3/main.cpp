@@ -94,7 +94,7 @@ int main(int, char**)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    const ImVec2 gui_size = ImVec2(380, 320);
+    const ImVec2 gui_size = ImVec2(400, 320);
     const ImVec2 gui_pos  = ImVec2((res_w - gui_size.x) * 0.5f,
                                   (res_h - gui_size.y) * 0.5f);
 
@@ -123,15 +123,16 @@ int main(int, char**)
                     ImGui::Separator();
 
                     ImGui::Text("SELECT YOUR EMULATOR :");
-                    ImGui::RadioButton("GAMLOOP 7.1##emu", &emu, 0); ImGui::SameLine();
+                    ImGui::RadioButton("GAMELOOP 7.1##emu", &emu, 0); ImGui::SameLine();
                     ImGui::RadioButton("SMARTGAGA##emu", &emu, 1);
 
+                    ImGui::Separator();
                     ImGui::Spacing();
                     ImGui::Text("SELECT YOUR GAME VERSION :");
-                    ImGui::RadioButton("Gl##ver", &ver, 0); ImGui::SameLine();
-                    ImGui::RadioButton("Kr##ver", &ver, 1); ImGui::SameLine();
-                    ImGui::RadioButton("Tw##ver", &ver, 2); ImGui::SameLine();
-                    ImGui::RadioButton("Vn##ver", &ver, 3);
+                    ImGui::RadioButton("Global##ver", &ver, 0); ImGui::SameLine();
+                    ImGui::RadioButton("Korea##ver", &ver, 1); ImGui::SameLine();
+                    ImGui::RadioButton("Taiwan##ver", &ver, 2); ImGui::SameLine();
+                    ImGui::RadioButton("Vietnam##ver", &ver, 3);
 
                     ImGui::Spacing();
                     if (ImGui::Button("BYPASS EMULATOR", ImVec2(-1,0))) { done = true; }
@@ -147,11 +148,13 @@ int main(int, char**)
                 if (ImGui::BeginTabItem("MISC"))
                 {
                     ImGui::TextColored(ImVec4(0,1,0,1), "SNAKE PRIVATE BYPASS");
-                    ImGui::Separator();
                     ImGui::Text("Memory Hacks");
-
-                    ImGui::SliderFloat("Wide View##wide", &wide, 0.0f, 100.0f, "%.0f");
                     ImGui::Separator();
+
+                    ImGui::Checkbox("Wide View##widechk", &wide_enabled);
+                    ImGui::SameLine();
+                    ImGui::SliderFloat("##wide", &wide, 0.0f, 100.0f, "%.0f");
+
 
                     ImGui::Checkbox("No Recoil##no", &r_no); ImGui::SameLine();
                     ImGui::Checkbox("No Tree##no", &t_no);  ImGui::SameLine();
