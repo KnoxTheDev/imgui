@@ -38,7 +38,7 @@ void SetupCustomTheme()
     ImVec4 color_text = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
     ImVec4 color_frame_bg = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
 
-    style.WindowPadding = ImVec2(0, 0);
+    style.WindowPadding = ImVec2(10, 10);
     style.FramePadding = ImVec2(8, 4);
     style.ItemSpacing = ImVec2(8, 4);
     style.ItemInnerSpacing = ImVec2(4, 4);
@@ -46,6 +46,9 @@ void SetupCustomTheme()
     style.FrameRounding = 2.0f;
     style.GrabRounding = 2.0f;
     style.TabRounding = 2.0f;
+    style.WindowBorderSize = 0.0f;
+    style.FrameBorderSize = 0.0f;
+
 
     style.Colors[ImGuiCol_Text] = color_text;
     style.Colors[ImGuiCol_WindowBg] = color_bg;
@@ -102,8 +105,7 @@ int main(int, char**)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 #endif
-    // Create window with custom title and size, but without decoration for a custom look
-    glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+    
     GLFWwindow* window = glfwCreateWindow(580, 480, "SNAKE BYPASS", nullptr, nullptr);
     if (window == nullptr)
         return 1;
@@ -115,7 +117,7 @@ int main(int, char**)
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable viewports for drag-outside functionality
+    // Viewports flag removed to fix compilation on environments where it's not supported.
 
     SetupCustomTheme();
 
@@ -155,39 +157,6 @@ int main(int, char**)
         ImGui::SetNextWindowSize(io.DisplaySize);
         ImGui::Begin("SnakeBypass", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
         
-        // Custom Title Bar
-        ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::GetStyle().Colors[ImGuiCol_TitleBgActive]);
-        ImGui::BeginChild("TitleBar", ImVec2(0, 35), true, ImGuiWindowFlags_NoScrollbar);
-        
-        // Title text centered
-        const char* title = "SNAKE BYPASS";
-        ImVec2 titleSize = ImGui::CalcTextSize(title);
-        ImGui::SetCursorPosX((ImGui::GetWindowWidth() - titleSize.x) / 2.0f);
-        ImGui::SetCursorPosY((ImGui::GetWindowHeight() - titleSize.y) / 2.0f);
-        ImGui::Text("%s", title);
-
-        // Close button
-        float buttonSize = ImGui::GetTextLineHeight();
-        ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - buttonSize - ImGui::GetStyle().FramePadding.x);
-        ImGui::SetCursorPosY((ImGui::GetWindowHeight() - buttonSize) / 2.0f);
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0,0,0,0));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 0.2f, 0.2f, 0.7f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 0.2f, 0.2f, 1.0f));
-        if (ImGui::Button("X", ImVec2(buttonSize, buttonSize))) {
-            glfwSetWindowShouldClose(window, true);
-        }
-        ImGui::PopStyleColor(3);
-
-        ImGui::EndChild();
-        ImGui::PopStyleColor();
-
-
-        // Main Content Area
-        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
-        ImGui::BeginChild("ContentArea", ImVec2(0, 0), false, ImGuiWindowFlags_NoScrollbar);
-        ImGui::PopStyleVar();
-
         // Tabs
         if (ImGui::BeginTabBar("MainTabs")) {
             // BYPASS Tab
@@ -259,7 +228,6 @@ int main(int, char**)
             ImGui::EndTabBar();
         }
 
-        ImGui::EndChild(); // End ContentArea
         ImGui::End(); // End SnakeBypass
 
 
@@ -271,14 +239,6 @@ int main(int, char**)
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-        {
-            GLFWwindow* backup_current_context = glfwGetCurrentContext();
-            ImGui::UpdatePlatformWindows();
-            ImGui::RenderPlatformWindowsDefault();
-            glfwMakeContextCurrent(backup_current_context);
-        }
 
         glfwSwapBuffers(window);
     }
