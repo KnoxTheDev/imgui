@@ -63,7 +63,7 @@ static void ApplySnakeTheme()
     style.Colors[ImGuiCol_CheckMark] = tab_focused;
     style.Colors[ImGuiCol_SliderGrab]        = color1;
     style.Colors[ImGuiCol_SliderGrabActive]  = color1;
-    
+
     style.WindowBorderSize = 0.0f;    // No border around main window
     style.FrameBorderSize  = 0.0f;    // No border around widgets
     style.TabBorderSize    = 0.0f;    // No tab border
@@ -144,42 +144,80 @@ int main(int, char**)
             {
                 if (ImGui::BeginTabItem("BYPASS"))
                 {
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing();
                     ImGui::TextColored(ImVec4(0,1,0,1), "Welcome to SNAKE PRIVATE BYPASS");
                     ImGui::Separator();
-
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing();
                     ImGui::Text("SELECT YOUR EMULATOR :");
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing();
                     ImGui::RadioButton("GAMELOOP 7.1##emu", &emu, 0); ImGui::SameLine();
                     ImGui::RadioButton("SMARTGAGA##emu", &emu, 1);
-
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing();
                     ImGui::Separator();
+                    ImGui::Spacing();
+                    ImGui::Spacing();
                     ImGui::Spacing();
                     ImGui::Text("SELECT YOUR GAME VERSION :");
                     ImGui::RadioButton("Global##ver", &ver, 0); ImGui::SameLine();
                     ImGui::RadioButton("Korea##ver", &ver, 1); ImGui::SameLine();
                     ImGui::RadioButton("Taiwan##ver", &ver, 2); ImGui::SameLine();
                     ImGui::RadioButton("Vietnam##ver", &ver, 3);
-
+                    ImGui::Spacing();
+                    ImGui::Spacing();
                     ImGui::Spacing();
                     if (ImGui::Button("BYPASS EMULATOR", ImVec2(-1,0))) { done = true; }
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing();
                     if (ImGui::Button("SAFE EXIT", ImVec2(-1,0)))     { glfwSetWindowShouldClose(window, GLFW_TRUE); }
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing(); 
                     if (ImGui::Button("REST GUEST", ImVec2(-1,0)))    { done = false; }
 
                     if (done)
+                        ImGui::Spacing();
+                        ImGui::Spacing();
+                        ImGui::Spacing();
                         ImGui::TextColored(ImVec4(0,1,0,1), "BYPASS DONE SUCCESSFUL");
-
+                        ImGui::Spacing();
+                        ImGui::Spacing();
+                        ImGui::Spacing();
                     ImGui::EndTabItem();
                 }
 
                 if (ImGui::BeginTabItem("MISC"))
                 {
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing();                    
                     ImGui::TextColored(ImVec4(0,1,0,1), "SNAKE PRIVATE BYPASS");
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing();
                     ImGui::Text("Memory Hacks");
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing();
                     ImGui::Separator();
-
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing();
                     ImGui::Checkbox("Wide View##widechk", &wide_enabled);
                     ImGui::SameLine();
                     ImGui::SliderFloat("##wide", &wide, 0.0f, 100.0f, "%.0f");
 
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing();
 
                     ImGui::Checkbox("No Recoil##no", &r_no); ImGui::SameLine();
                     ImGui::Checkbox("No Tree##no", &t_no);  ImGui::SameLine();
@@ -187,11 +225,17 @@ int main(int, char**)
                     ImGui::Checkbox("Small Crosshair##cross", &cross_small);
 
                     ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+
                     ImGui::Checkbox("Night Mode##nm", &night);   ImGui::SameLine();
                     ImGui::Checkbox("InstaHit##ih", &insta);    ImGui::SameLine();
                     ImGui::Checkbox("X-Effect##xf", &xfx);      ImGui::SameLine();
                     ImGui::Checkbox("LUFFY-HAND##lf", &luffy);
                     ImGui::Checkbox("ZeroHead##zh", &zero);
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing();
 
                     ImGui::EndTabItem();
                 }
