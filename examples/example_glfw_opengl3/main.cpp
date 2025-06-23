@@ -194,7 +194,7 @@ int main(int, char**)
                         ImGui::TextColored(ImVec4(0,1,0,1), "BYPASS DONE SUCCESSFUL");
                         ImGui::Spacing();
                         ImGui::Spacing();
-                        ImGui::Spacing()
+                        ImGui::Spacing();
                     }
                     
                     ImGui::EndTabItem();
