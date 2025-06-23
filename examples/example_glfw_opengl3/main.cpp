@@ -12,7 +12,6 @@
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
-// Hide the console window on Windows
 #if defined(_MSC_VER)
 #pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 #endif
@@ -22,44 +21,43 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-// Apply the accurate "Snake Bypass" theme
 static void ApplySnakeTheme()
 {
     ImGuiStyle& style = ImGui::GetStyle();
-    // Base colors
-    style.Colors[ImGuiCol_WindowBg]            = ImVec4(0.10f, 0.10f, 0.10f, 0.95f); // Dark background
+
+    style.Colors[ImGuiCol_WindowBg]            = ImVec4(0.10f, 0.10f, 0.10f, 0.95f);
     style.Colors[ImGuiCol_Header]              = ImVec4(0.66f, 0.44f, 0.04f, 1.00f);
     style.Colors[ImGuiCol_HeaderHovered]       = ImVec4(0.75f, 0.55f, 0.06f, 1.00f);
     style.Colors[ImGuiCol_HeaderActive]        = ImVec4(0.80f, 0.60f, 0.10f, 1.00f);
 
-    // Tab styling
     style.Colors[ImGuiCol_Tab]                 = ImVec4(0.66f, 0.44f, 0.04f, 1.00f);
     style.Colors[ImGuiCol_TabHovered]          = ImVec4(0.75f, 0.55f, 0.06f, 1.00f);
     style.Colors[ImGuiCol_TabActive]           = ImVec4(0.80f, 0.60f, 0.10f, 1.00f);
     style.Colors[ImGuiCol_TabUnfocused]        = ImVec4(0.50f, 0.35f, 0.03f, 1.00f);
-    style.Colors[ImGuiCol_TabUnfocusedActive]  = ImGui::GetStyle().Colors[ImGuiCol_TabActive];
+    style.Colors[ImGuiCol_TabUnfocusedActive]  = style.Colors[ImGuiCol_TabActive];
+    style.Colors[ImGuiCol_Border]              = ImVec4(0.80f, 0.60f, 0.10f, 0.5f);
+    style.Colors[ImGuiCol_BorderShadow]        = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
 
-    // Button styling
     style.Colors[ImGuiCol_Button]              = ImVec4(0.66f, 0.44f, 0.04f, 1.00f);
     style.Colors[ImGuiCol_ButtonHovered]       = ImVec4(0.75f, 0.55f, 0.06f, 1.00f);
     style.Colors[ImGuiCol_ButtonActive]        = ImVec4(0.80f, 0.60f, 0.10f, 1.00f);
 
-    // Text colors
     style.Colors[ImGuiCol_Text]                = ImVec4(0.85f, 0.85f, 0.85f, 1.00f);
     style.Colors[ImGuiCol_TextDisabled]        = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
-    style.Colors[ImGuiCol_TextSelectedBg]      = ImVec4(0.00f, 0.80f, 0.00f, 0.50f); // Green accent
+    style.Colors[ImGuiCol_TextSelectedBg]      = ImVec4(0.00f, 0.80f, 0.00f, 0.50f);
 
-    // Frame background for inputs
     style.Colors[ImGuiCol_FrameBg]             = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);
     style.Colors[ImGuiCol_FrameBgHovered]      = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
     style.Colors[ImGuiCol_FrameBgActive]       = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
 
-    // Separator line
     style.Colors[ImGuiCol_Separator]           = ImVec4(0.45f, 0.40f, 0.40f, 0.50f);
 
     style.FrameRounding = 3.0f;
     style.GrabRounding = 3.0f;
     style.TabRounding = 2.0f;
+    style.WindowBorderSize = 1.0f;
+    style.FrameBorderSize = 1.0f;
+    style.TabBorderSize = 1.0f;
 }
 
 int main(int, char**)
