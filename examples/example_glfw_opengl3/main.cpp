@@ -90,6 +90,12 @@ int main(int, char**)
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
+    ImFont* rudaFont = io.Fonts->AddFontFromFileTTF("Ruda-Bold.ttf", 18.0f);
+    if (!rudaFont)
+       fprintf(stderr, "Failed to load font: Ruda-Bold.ttf\n");
+    else
+    io.FontDefault = rudaFont;
+
     ImGui::StyleColorsDark();
     ApplySnakeTheme();
 
