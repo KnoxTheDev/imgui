@@ -12,6 +12,11 @@
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
+// Add this pragma to hide the console window on Windows
+#if defined(_MSC_VER)
+#pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+#endif
+
 #ifdef __EMSCRIPTEN__
 #include "../libs/emscripten/emscripten_mainloop_stub.h"
 #endif
