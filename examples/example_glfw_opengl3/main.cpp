@@ -117,7 +117,7 @@ int main(int, char**)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    const ImVec2 gui_size = ImVec2(445, 420);
+    const ImVec2 gui_size = ImVec2(445, 430);
     const ImVec2 gui_pos  = ImVec2((res_w - gui_size.x) * 0.5f,
                                   (res_h - gui_size.y) * 0.5f);
 
@@ -187,13 +187,16 @@ int main(int, char**)
                     if (ImGui::Button("REST GUEST", ImVec2(-1,0)))    { done = false; }
 
                     if (done)
+                    {
                         ImGui::Spacing();
                         ImGui::Spacing();
                         ImGui::Spacing();
                         ImGui::TextColored(ImVec4(0,1,0,1), "BYPASS DONE SUCCESSFUL");
                         ImGui::Spacing();
                         ImGui::Spacing();
-                        ImGui::Spacing();
+                        ImGui::Spacing()
+                    }
+                    
                     ImGui::EndTabItem();
                 }
 
