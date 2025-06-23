@@ -117,7 +117,7 @@ int main(int, char**)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    const ImVec2 gui_size = ImVec2(445, 320);
+    const ImVec2 gui_size = ImVec2(445, 360);
     const ImVec2 gui_pos  = ImVec2((res_w - gui_size.x) * 0.5f,
                                   (res_h - gui_size.y) * 0.5f);
 
@@ -166,6 +166,9 @@ int main(int, char**)
                     ImGui::Spacing();
                     ImGui::Spacing();
                     ImGui::Text("SELECT YOUR GAME VERSION :");
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing();                    
                     ImGui::RadioButton("Global##ver", &ver, 0); ImGui::SameLine();
                     ImGui::RadioButton("Korea##ver", &ver, 1); ImGui::SameLine();
                     ImGui::RadioButton("Taiwan##ver", &ver, 2); ImGui::SameLine();
@@ -232,6 +235,9 @@ int main(int, char**)
                     ImGui::Checkbox("InstaHit##ih", &insta);    ImGui::SameLine();
                     ImGui::Checkbox("X-Effect##xf", &xfx);      ImGui::SameLine();
                     ImGui::Checkbox("LUFFY-HAND##lf", &luffy);
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                    ImGui::Spacing();
                     ImGui::Checkbox("ZeroHead##zh", &zero);
                     ImGui::Spacing();
                     ImGui::Spacing();
