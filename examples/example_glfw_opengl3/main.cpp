@@ -61,6 +61,22 @@ static void ApplySnakeTheme()
     style.Colors[ImGuiCol_Separator]      = ImVec4(0.45f, 0.40f, 0.40f, 0.50f);
 
     style.Colors[ImGuiCol_CheckMark] = tab_focused;
+    style.Colors[ImGuiCol_SliderGrab]        = color1;
+    style.Colors[ImGuiCol_SliderGrabActive]  = color1;
+    
+    style.WindowBorderSize = 0.0f;    // No border around main window
+    style.FrameBorderSize  = 0.0f;    // No border around widgets
+    style.TabBorderSize    = 0.0f;    // No tab border
+    style.GrabMinSize      = 10.0f;   // Optional: smaller grab handle
+
+    // Hide resizer corner
+    style.Colors[ImGuiCol_ResizeGrip]         = ImVec4(0, 0, 0, 0);
+    style.Colors[ImGuiCol_ResizeGripHovered]  = ImVec4(0, 0, 0, 0);
+    style.Colors[ImGuiCol_ResizeGripActive]   = ImVec4(0, 0, 0, 0);
+
+    // Optional (removes border visuals on sliders, checkboxes, buttons etc.)
+    style.Colors[ImGuiCol_Border]        = ImVec4(0, 0, 0, 0);
+    style.Colors[ImGuiCol_BorderShadow]  = ImVec4(0, 0, 0, 0);
 
     style.FrameRounding      = 3.0f;
     style.GrabRounding       = 3.0f;
@@ -122,7 +138,7 @@ int main(int, char**)
         ImGui::SetNextWindowSize(gui_size, ImGuiCond_Once);
         ImGui::SetNextWindowPos(gui_pos, ImGuiCond_Once);
         static bool show_main_window = true;
-        if (ImGui::Begin("SNAKE BYPASS", &show_main_window))
+        if (ImGui::Begin("SNAKE BYPASS", &show_main_window, ImGuiWindowFlags_NoResize))
         {
             if (ImGui::BeginTabBar("Tabs##Snake"))
             {
