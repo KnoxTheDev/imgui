@@ -22,74 +22,81 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-// Apply the custom "Snake Bypass" theme
+// Apply the accurate "Snake Bypass" theme
 static void ApplySnakeTheme()
 {
     ImGuiStyle& style = ImGui::GetStyle();
-    // Overall window background
-    style.Colors[ImGuiCol_WindowBg]            = ImVec4(0.12f, 0.10f, 0.08f, 0.95f);
-    // Tabs
-    style.Colors[ImGuiCol_Tab]                 = ImVec4(0.45f, 0.33f, 0.12f, 1.00f);
-    style.Colors[ImGuiCol_TabHovered]          = ImVec4(0.55f, 0.40f, 0.15f, 1.00f);
-    style.Colors[ImGuiCol_TabActive]           = ImVec4(0.65f, 0.50f, 0.20f, 1.00f);
-    style.Colors[ImGuiCol_TabUnfocused]        = style.Colors[ImGuiCol_Tab];
-    style.Colors[ImGuiCol_TabUnfocusedActive]  = style.Colors[ImGuiCol_TabActive];
-    // Buttons
-    style.Colors[ImGuiCol_Button]              = ImVec4(0.45f, 0.33f, 0.12f, 1.00f);
-    style.Colors[ImGuiCol_ButtonHovered]       = ImVec4(0.55f, 0.40f, 0.15f, 1.00f);
-    style.Colors[ImGuiCol_ButtonActive]        = ImVec4(0.65f, 0.50f, 0.20f, 1.00f);
-    // Text
-    style.Colors[ImGuiCol_Text]                = ImVec4(0.78f, 0.78f, 0.78f, 1.00f);
-    // Green accent text
-    style.Colors[ImGuiCol_TextSelectedBg]      = ImVec4(0.00f, 0.80f, 0.00f, 0.35f);
+    // Base colors
+    style.Colors[ImGuiCol_WindowBg]            = ImVec4(0.10f, 0.10f, 0.10f, 0.95f); // Dark background
+    style.Colors[ImGuiCol_Header]              = ImVec4(0.66f, 0.44f, 0.04f, 1.00f);
+    style.Colors[ImGuiCol_HeaderHovered]       = ImVec4(0.75f, 0.55f, 0.06f, 1.00f);
+    style.Colors[ImGuiCol_HeaderActive]        = ImVec4(0.80f, 0.60f, 0.10f, 1.00f);
+
+    // Tab styling
+    style.Colors[ImGuiCol_Tab]                 = ImVec4(0.66f, 0.44f, 0.04f, 1.00f);
+    style.Colors[ImGuiCol_TabHovered]          = ImVec4(0.75f, 0.55f, 0.06f, 1.00f);
+    style.Colors[ImGuiCol_TabActive]           = ImVec4(0.80f, 0.60f, 0.10f, 1.00f);
+    style.Colors[ImGuiCol_TabUnfocused]        = ImVec4(0.50f, 0.35f, 0.03f, 1.00f);
+    style.Colors[ImGuiCol_TabUnfocusedActive]  = ImGui::GetStyle().Colors[ImGuiCol_TabActive];
+
+    // Button styling
+    style.Colors[ImGuiCol_Button]              = ImVec4(0.66f, 0.44f, 0.04f, 1.00f);
+    style.Colors[ImGuiCol_ButtonHovered]       = ImVec4(0.75f, 0.55f, 0.06f, 1.00f);
+    style.Colors[ImGuiCol_ButtonActive]        = ImVec4(0.80f, 0.60f, 0.10f, 1.00f);
+
+    // Text colors
+    style.Colors[ImGuiCol_Text]                = ImVec4(0.85f, 0.85f, 0.85f, 1.00f);
+    style.Colors[ImGuiCol_TextDisabled]        = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
+    style.Colors[ImGuiCol_TextSelectedBg]      = ImVec4(0.00f, 0.80f, 0.00f, 0.50f); // Green accent
+
+    // Frame background for inputs
+    style.Colors[ImGuiCol_FrameBg]             = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);
+    style.Colors[ImGuiCol_FrameBgHovered]      = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+    style.Colors[ImGuiCol_FrameBgActive]       = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+
+    // Separator line
+    style.Colors[ImGuiCol_Separator]           = ImVec4(0.45f, 0.40f, 0.40f, 0.50f);
+
+    style.FrameRounding = 3.0f;
+    style.GrabRounding = 3.0f;
+    style.TabRounding = 2.0f;
 }
 
 int main(int, char**)
 {
-    // Setup GLFW
     glfwSetErrorCallback(glfw_error_callback);
-    if (!glfwInit())
-        return 1;
+    if (!glfwInit()) return 1;
 
-    // Decide GL+GLSL versions
     const char* glsl_version = "#version 130";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-    // Create GLFW window (800×640)
     int res_w = 800, res_h = 640;
     GLFWwindow* window = glfwCreateWindow(res_w, res_h, "Snake Bypass", NULL, NULL);
-    if (!window)
-        return 1;
+    if (!window) return 1;
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
 
-    // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-    // Apply custom style
     ImGui::StyleColorsDark();
     ApplySnakeTheme();
 
-    // Setup Platform/Renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    // Desired ImGui window size from reference (380×320)
     const ImVec2 gui_size = ImVec2(380, 320);
     const ImVec2 gui_pos  = ImVec2((res_w - gui_size.x) * 0.5f,
                                   (res_h - gui_size.y) * 0.5f);
 
-    // State variables (unique IDs via labels)
     int emu = 0, ver = 0;
     bool done = false;
     float wide = 47.0f;
     bool r_no = false, t_no = false, g_no = false, cross_small = false;
     bool night = false, insta = false, xfx = false, luffy = false, zero = false;
 
-    // Main loop
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -106,7 +113,7 @@ int main(int, char**)
                 if (ImGui::BeginTabItem("BYPASS"))
                 {
                     ImGui::TextColored(ImVec4(0,1,0,1), "Welcome to SNAKE PRIVATE BYPASS");
-                    ImGui::Spacing();
+                    ImGui::Separator();
 
                     ImGui::Text("SELECT YOUR EMULATOR :");
                     ImGui::RadioButton("GAMLOOP 7.1##emu", &emu, 0); ImGui::SameLine();
@@ -120,9 +127,9 @@ int main(int, char**)
                     ImGui::RadioButton("Vn##ver", &ver, 3);
 
                     ImGui::Spacing();
-                    if (ImGui::Button("BYPASS EMULATOR")) { done = true; }
-                    if (ImGui::Button("SAFE EXIT"))     { glfwSetWindowShouldClose(window, GLFW_TRUE); }
-                    if (ImGui::Button("REST GUEST"))    { done = false; }
+                    if (ImGui::Button("BYPASS EMULATOR", ImVec2(-1,0))) { done = true; }
+                    if (ImGui::Button("SAFE EXIT", ImVec2(-1,0)))     { glfwSetWindowShouldClose(window, GLFW_TRUE); }
+                    if (ImGui::Button("REST GUEST", ImVec2(-1,0)))    { done = false; }
 
                     if (done)
                         ImGui::TextColored(ImVec4(0,1,0,1), "BYPASS DONE SUCCESSFUL");
@@ -133,12 +140,11 @@ int main(int, char**)
                 if (ImGui::BeginTabItem("MISC"))
                 {
                     ImGui::TextColored(ImVec4(0,1,0,1), "SNAKE PRIVATE BYPASS");
-                    ImGui::Spacing();
+                    ImGui::Separator();
                     ImGui::Text("Memory Hacks");
-                    ImGui::Spacing();
 
                     ImGui::SliderFloat("Wide View##wide", &wide, 0.0f, 100.0f, "%.0f");
-                    ImGui::Spacing();
+                    ImGui::Separator();
 
                     ImGui::Checkbox("No Recoil##no", &r_no); ImGui::SameLine();
                     ImGui::Checkbox("No Tree##no", &t_no);  ImGui::SameLine();
@@ -160,17 +166,14 @@ int main(int, char**)
         ImGui::End();
 
         ImGui::Render();
-        int w, h;
-        glfwGetFramebufferSize(window, &w, &h);
+        int w, h; glfwGetFramebufferSize(window, &w, &h);
         glViewport(0, 0, w, h);
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClearColor(0.10f, 0.10f, 0.10f, 1.00f);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
         glfwSwapBuffers(window);
     }
 
-    // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
