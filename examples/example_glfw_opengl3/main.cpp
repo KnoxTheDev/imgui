@@ -12,7 +12,7 @@
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
-// Add this pragma to hide the console window on Windows
+// Hide the console window on Windows
 #if defined(_MSC_VER)
 #pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 #endif
@@ -26,23 +26,72 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
+// Function to set up the custom theme
+void SetupCustomTheme()
+{
+    ImGuiStyle& style = ImGui::GetStyle();
+    
+    ImVec4 color_bg = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+    ImVec4 color_main = ImVec4(0.71f, 0.54f, 0.25f, 1.0f); // Orange/Brown
+    ImVec4 color_dark_main = ImVec4(0.51f, 0.38f, 0.18f, 1.0f);
+    ImVec4 color_hover = ImVec4(0.81f, 0.62f, 0.30f, 1.0f);
+    ImVec4 color_text = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+    ImVec4 color_frame_bg = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+
+    style.WindowPadding = ImVec2(0, 0);
+    style.FramePadding = ImVec2(8, 4);
+    style.ItemSpacing = ImVec2(8, 4);
+    style.ItemInnerSpacing = ImVec2(4, 4);
+    style.WindowRounding = 0.0f;
+    style.FrameRounding = 2.0f;
+    style.GrabRounding = 2.0f;
+    style.TabRounding = 2.0f;
+
+    style.Colors[ImGuiCol_Text] = color_text;
+    style.Colors[ImGuiCol_WindowBg] = color_bg;
+    style.Colors[ImGuiCol_ChildBg] = color_bg;
+    style.Colors[ImGuiCol_PopupBg] = color_bg;
+
+    style.Colors[ImGuiCol_Border] = ImVec4(0,0,0,0);
+    style.Colors[ImGuiCol_BorderShadow] = ImVec4(0,0,0,0);
+
+    style.Colors[ImGuiCol_FrameBg] = color_frame_bg;
+    style.Colors[ImGuiCol_FrameBgHovered] = color_frame_bg;
+    style.Colors[ImGuiCol_FrameBgActive] = color_frame_bg;
+
+    style.Colors[ImGuiCol_TitleBg] = color_main;
+    style.Colors[ImGuiCol_TitleBgActive] = color_main;
+    style.Colors[ImGuiCol_TitleBgCollapsed] = color_main;
+
+    style.Colors[ImGuiCol_CheckMark] = color_main;
+    style.Colors[ImGuiCol_SliderGrab] = color_main;
+    style.Colors[ImGuiCol_SliderGrabActive] = color_hover;
+
+    style.Colors[ImGuiCol_Button] = color_main;
+    style.Colors[ImGuiCol_ButtonHovered] = color_hover;
+    style.Colors[ImGuiCol_ButtonActive] = color_dark_main;
+    
+    style.Colors[ImGuiCol_Header] = color_dark_main;
+    style.Colors[ImGuiCol_HeaderHovered] = color_hover;
+    style.Colors[ImGuiCol_HeaderActive] = color_main;
+    
+    style.Colors[ImGuiCol_Tab] = color_dark_main;
+    style.Colors[ImGuiCol_TabHovered] = color_hover;
+    style.Colors[ImGuiCol_TabActive] = color_main;
+    style.Colors[ImGuiCol_TabUnfocused] = color_dark_main;
+    style.Colors[ImGuiCol_TabUnfocusedActive] = color_main;
+
+    style.Colors[ImGuiCol_Separator] = color_frame_bg;
+}
+
+
 int main(int, char**)
 {
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
         return 1;
 
-#if defined(IMGUI_IMPL_OPENGL_ES2)
-    const char* glsl_version = "#version 100";
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-#elif defined(IMGUI_IMPL_OPENGL_ES3)
-    const char* glsl_version = "#version 300 es";
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-#elif defined(__APPLE__)
+#if defined(__APPLE__)
     const char* glsl_version = "#version 150";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -53,9 +102,9 @@ int main(int, char**)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 #endif
-
-    float main_scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor());
-    GLFWwindow* window = glfwCreateWindow((int)(1280 * main_scale), (int)(800 * main_scale), "Dear ImGui GLFW+OpenGL3 example", nullptr, nullptr);
+    // Create window with custom title and size, but without decoration for a custom look
+    glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+    GLFWwindow* window = glfwCreateWindow(580, 480, "SNAKE BYPASS", nullptr, nullptr);
     if (window == nullptr)
         return 1;
     glfwMakeContextCurrent(window);
@@ -66,112 +115,155 @@ int main(int, char**)
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable viewports for drag-outside functionality
 
-    ImGui::StyleColorsDark();
-
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.ScaleAllSizes(main_scale);
-    style.FontScaleDpi = main_scale;
+    SetupCustomTheme();
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-#ifdef __EMSCRIPTEN__
-    ImGui_ImplGlfw_InstallEmscriptenCallbacks(window, "#canvas");
-#endif
     ImGui_ImplOpenGL3_Init(glsl_version);
+    
+    // UI state variables
+    static bool bypass_successful = false;
+    static int selected_emulator = 0; // 0 for Gameloop, 1 for Smartgaga
+    static int selected_version = 0; // 0:Gl, 1:Kr, 2:Tw, 3:Vn
 
-    bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    // Misc Tab State
+    static bool wide_view_enabled = false;
+    static int wide_view_value = 47;
+    static bool no_recoil = false;
+    static bool no_tree = false;
+    static bool no_grass = false;
+    static bool small_crosshair = false;
+    static bool night_mode = false;
+    static bool instahit = false;
+    static bool x_effect = false;
+    static bool luffy_hand = false;
+    static bool zero_head = false;
+    
+    ImVec4 clear_color = ImVec4(0.1f, 0.1f, 0.1f, 1.00f);
 
-#ifdef __EMSCRIPTEN__
-    io.IniFilename = nullptr;
-    EMSCRIPTEN_MAINLOOP_BEGIN
-#else
     while (!glfwWindowShouldClose(window))
-#endif
     {
         glfwPollEvents();
-        if (glfwGetWindowAttrib(window, GLFW_ICONIFIED) != 0)
-        {
-            ImGui_ImplGlfw_Sleep(10);
-            continue;
-        }
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        
+        // --- Main Window ---
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(io.DisplaySize);
+        ImGui::Begin("SnakeBypass", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
+        
+        // Custom Title Bar
+        ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::GetStyle().Colors[ImGuiCol_TitleBgActive]);
+        ImGui::BeginChild("TitleBar", ImVec2(0, 35), true, ImGuiWindowFlags_NoScrollbar);
+        
+        // Title text centered
+        const char* title = "SNAKE BYPASS";
+        ImVec2 titleSize = ImGui::CalcTextSize(title);
+        ImGui::SetCursorPosX((ImGui::GetWindowWidth() - titleSize.x) / 2.0f);
+        ImGui::SetCursorPosY((ImGui::GetWindowHeight() - titleSize.y) / 2.0f);
+        ImGui::Text("%s", title);
 
-        {
-            ImGui::Begin("Custom Demo Menu");
+        // Close button
+        float buttonSize = ImGui::GetTextLineHeight();
+        ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - buttonSize - ImGui::GetStyle().FramePadding.x);
+        ImGui::SetCursorPosY((ImGui::GetWindowHeight() - buttonSize) / 2.0f);
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0,0,0,0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 0.2f, 0.2f, 0.7f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 0.2f, 0.2f, 1.0f));
+        if (ImGui::Button("X", ImVec2(buttonSize, buttonSize))) {
+            glfwSetWindowShouldClose(window, true);
+        }
+        ImGui::PopStyleColor(3);
 
-            static char text_buffer[128] = "Some text here";
-            static float float_slider = 0.5f;
-            static int int_slider = 20;
-            static bool checkbox_state = true;
-            static int radio_button_state = 0;
-            static int combo_item = 0;
+        ImGui::EndChild();
+        ImGui::PopStyleColor();
 
-            ImGui::Text("This is a custom panel demonstrating various widgets.");
-            ImGui::Separator();
 
-            ImGui::Checkbox("Enable Feature", &checkbox_state);
+        // Main Content Area
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
+        ImGui::BeginChild("ContentArea", ImVec2(0, 0), false, ImGuiWindowFlags_NoScrollbar);
+        ImGui::PopStyleVar();
 
-            ImGui::InputText("Text Field", text_buffer, IM_ARRAYSIZE(text_buffer));
+        // Tabs
+        if (ImGui::BeginTabBar("MainTabs")) {
+            // BYPASS Tab
+            if (ImGui::BeginTabItem("BYPASS")) {
+                ImGui::Dummy(ImVec2(0.0f, 5.0f)); // Spacer
+                ImGui::TextColored(ImVec4(0.1f, 0.9f, 0.2f, 1.0f), "Welcome to SNAKE PRIVATE BYPASS");
+                ImGui::Separator();
 
-            ImGui::SliderFloat("Float Value", &float_slider, 0.0f, 1.0f);
-            ImGui::SliderInt("Integer Value", &int_slider, 0, 100);
+                ImGui::Dummy(ImVec2(0.0f, 10.0f));
+                ImGui::Text("SELECT YOUR EMULATOR :");
+                ImGui::RadioButton("GAMELOOP 7.1", &selected_emulator, 0); ImGui::SameLine(250);
+                ImGui::RadioButton("SMARTGAGA", &selected_emulator, 1);
+                ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-            ImGui::Text("Radio Buttons:");
-            ImGui::RadioButton("Option 1", &radio_button_state, 0); ImGui::SameLine();
-            ImGui::RadioButton("Option 2", &radio_button_state, 1); ImGui::SameLine();
-            ImGui::RadioButton("Option 3", &radio_button_state, 2);
+                ImGui::Text("SELECT YOUR GAME VERSION :");
+                ImGui::RadioButton("Gl", &selected_version, 0); ImGui::SameLine(150);
+                ImGui::RadioButton("Kr", &selected_version, 1); ImGui::SameLine(300);
+                ImGui::RadioButton("Tw", &selected_version, 2); ImGui::SameLine(450);
+                ImGui::RadioButton("Vn", &selected_version, 3);
+                ImGui::Separator();
 
-            const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango" };
-            ImGui::Combo("Fruit", &combo_item, items, IM_ARRAYSIZE(items));
+                ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
-            ImGui::Separator();
+                if (ImGui::Button("BYPASS EMULATOR", ImVec2(-1, 35))) {
+                    bypass_successful = true;
+                }
+                ImGui::Dummy(ImVec2(0.0f, 5.0f));
+                ImGui::Button("SAFE EXIT", ImVec2(-1, 35));
+                ImGui::Dummy(ImVec2(0.0f, 5.0f));
+                ImGui::Button("REST GUEST", ImVec2(-1, 35));
 
-            ImGui::Text("Use the color picker below to change the background.");
-            ImGui::ColorEdit4("Background Color", (float*)&clear_color);
+                ImGui::Dummy(ImVec2(0.0f, 25.0f));
+                if(bypass_successful) {
+                    ImGui::TextColored(ImVec4(0.1f, 0.9f, 0.2f, 1.0f), "BYPASS DONE SUCCESSFUL");
+                }
 
-            if (ImGui::TreeNode("More Info"))
-            {
-                ImGui::TextWrapped("This is a collapsible section. You can place more detailed controls or information here without cluttering the main UI.");
-                ImGui::TreePop();
+                ImGui::EndTabItem();
             }
 
-            ImGui::End();
+            // MISC Tab
+            if (ImGui::BeginTabItem("MISC")) {
+                ImGui::Dummy(ImVec2(0.0f, 5.0f));
+                ImGui::TextColored(ImVec4(0.1f, 0.9f, 0.2f, 1.0f), "SNAKE PRIVATE BYPASS");
+                ImGui::Separator();
+                
+                ImGui::Dummy(ImVec2(0.0f, 5.0f));
+                ImGui::Text("Memory Hacks");
+                ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+                ImGui::Checkbox("Wide View", &wide_view_enabled); ImGui::SameLine();
+                ImGui::PushItemWidth(200);
+                ImGui::SliderInt("##wideview", &wide_view_value, 0, 100, "%d");
+                ImGui::PopItemWidth();
+                
+                ImGui::Checkbox("No Recoil", &no_recoil); ImGui::SameLine(200);
+                ImGui::Checkbox("No Tree", &no_tree); ImGui::SameLine(350);
+                ImGui::Checkbox("No Grass", &no_grass);
+
+                ImGui::Checkbox("Small Crosshair", &small_crosshair); ImGui::SameLine(200);
+                ImGui::Checkbox("Night Mode", &night_mode); ImGui::SameLine(350);
+                ImGui::Checkbox("InstaHit", &instahit);
+
+                ImGui::Checkbox("X-Effect", &x_effect); ImGui::SameLine(200);
+                ImGui::Checkbox("LUFFY-HAND", &luffy_hand); ImGui::SameLine(350);
+                ImGui::Checkbox("ZeroHead", &zero_head);
+                
+                ImGui::EndTabItem();
+            }
+            ImGui::EndTabBar();
         }
 
-        {
-            static float f = 0.0f;
-            static int counter = 0;
+        ImGui::EndChild(); // End ContentArea
+        ImGui::End(); // End SnakeBypass
 
-            ImGui::Begin("Hello, world!");
 
-            ImGui::Text("This is some useful text.");
-            ImGui::Checkbox("Another Window", &show_another_window);
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-            ImGui::ColorEdit3("clear color", (float*)&clear_color);
-
-            if (ImGui::Button("Button"))
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-            ImGui::End();
-        }
-
-        if (show_another_window)
-        {
-            ImGui::Begin("Another Window", &show_another_window);
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
-        }
-
+        // Rendering
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
@@ -180,12 +272,18 @@ int main(int, char**)
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            GLFWwindow* backup_current_context = glfwGetCurrentContext();
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+            glfwMakeContextCurrent(backup_current_context);
+        }
+
         glfwSwapBuffers(window);
     }
-#ifdef __EMSCRIPTEN__
-    EMSCRIPTEN_MAINLOOP_END;
-#endif
 
+    // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
