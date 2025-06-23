@@ -26,26 +26,30 @@ static void ApplySnakeTheme()
     ImGuiStyle& style = ImGui::GetStyle();
 
     style.Colors[ImGuiCol_WindowBg]            = ImVec4(0.02f, 0.02f, 0.02f, 0.95f); // VS Code black high contrast
-    style.Colors[ImGuiCol_Header]              = ImVec4(0.66f, 0.44f, 0.04f, 1.00f);
-    style.Colors[ImGuiCol_HeaderHovered]       = ImVec4(0.75f, 0.55f, 0.06f, 1.00f);
-    style.Colors[ImGuiCol_HeaderActive]        = ImVec4(0.80f, 0.60f, 0.10f, 1.00f);
 
-    style.Colors[ImGuiCol_Tab]                 = ImVec4(0.66f, 0.44f, 0.04f, 1.00f);
-    style.Colors[ImGuiCol_TabHovered]          = ImVec4(0.75f, 0.55f, 0.06f, 1.00f);
-    style.Colors[ImGuiCol_TabActive]           = ImVec4(0.80f, 0.60f, 0.10f, 1.00f);
-    style.Colors[ImGuiCol_TabUnfocused]        = ImVec4(0.50f, 0.35f, 0.03f, 1.00f);
-    style.Colors[ImGuiCol_TabUnfocusedActive]  = style.Colors[ImGuiCol_TabActive];
+    ImVec4 color1 = ImVec4(232.0f/255.0f, 163.0f/255.0f, 33.0f/255.0f, 1.00f); // #e8a321
+    ImVec4 color2 = ImVec4(130.0f/255.0f, 92.0f/255.0f, 38.0f/255.0f, 1.00f);  // #825c26
 
-    style.Colors[ImGuiCol_TitleBg]             = ImVec4(0.10f, 0.07f, 0.02f, 1.00f); // Dark golden
-    style.Colors[ImGuiCol_TitleBgActive]       = ImVec4(0.15f, 0.10f, 0.03f, 1.00f);
-    style.Colors[ImGuiCol_TitleBgCollapsed]    = ImVec4(0.08f, 0.06f, 0.01f, 1.00f);
+    style.Colors[ImGuiCol_Header]              = color2;
+    style.Colors[ImGuiCol_HeaderHovered]       = ImVec4(140.0f/255.0f, 100.0f/255.0f, 45.0f/255.0f, 1.00f);
+    style.Colors[ImGuiCol_HeaderActive]        = ImVec4(150.0f/255.0f, 110.0f/255.0f, 50.0f/255.0f, 1.00f);
 
-    style.Colors[ImGuiCol_Border]              = ImVec4(0.80f, 0.60f, 0.10f, 0.5f);
+    style.Colors[ImGuiCol_Tab]                 = color1;
+    style.Colors[ImGuiCol_TabHovered]          = ImVec4(250.0f/255.0f, 180.0f/255.0f, 40.0f/255.0f, 1.00f);
+    style.Colors[ImGuiCol_TabActive]           = color1;
+    style.Colors[ImGuiCol_TabUnfocused]        = color1;
+    style.Colors[ImGuiCol_TabUnfocusedActive]  = color1;
+
+    style.Colors[ImGuiCol_TitleBg]             = color1;
+    style.Colors[ImGuiCol_TitleBgActive]       = color1;
+    style.Colors[ImGuiCol_TitleBgCollapsed]    = color1;
+
+    style.Colors[ImGuiCol_Border]              = color1;
     style.Colors[ImGuiCol_BorderShadow]        = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
 
-    style.Colors[ImGuiCol_Button]              = ImVec4(0.66f, 0.44f, 0.04f, 1.00f);
-    style.Colors[ImGuiCol_ButtonHovered]       = ImVec4(0.75f, 0.55f, 0.06f, 1.00f);
-    style.Colors[ImGuiCol_ButtonActive]        = ImVec4(0.80f, 0.60f, 0.10f, 1.00f);
+    style.Colors[ImGuiCol_Button]              = color2;
+    style.Colors[ImGuiCol_ButtonHovered]       = ImVec4(140.0f/255.0f, 100.0f/255.0f, 45.0f/255.0f, 1.00f);
+    style.Colors[ImGuiCol_ButtonActive]        = ImVec4(150.0f/255.0f, 110.0f/255.0f, 50.0f/255.0f, 1.00f);
 
     style.Colors[ImGuiCol_Text]                = ImVec4(0.85f, 0.85f, 0.85f, 1.00f);
     style.Colors[ImGuiCol_TextDisabled]        = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
