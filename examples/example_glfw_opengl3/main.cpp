@@ -25,48 +25,50 @@ static void ApplySnakeTheme()
 {
     ImGuiStyle& style = ImGui::GetStyle();
 
-    style.Colors[ImGuiCol_WindowBg]            = ImVec4(0.02f, 0.02f, 0.02f, 0.95f); // VS Code black high contrast
+    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.95f); // VS Code black high contrast
 
     ImVec4 color1 = ImVec4(232.0f/255.0f, 163.0f/255.0f, 33.0f/255.0f, 1.00f); // #e8a321
     ImVec4 color2 = ImVec4(130.0f/255.0f, 92.0f/255.0f, 38.0f/255.0f, 1.00f);  // #825c26
+    ImVec4 tab_focused   = ImVec4(199.0f/255.0f, 140.0f/255.0f, 54.0f/255.0f, 1.00f); // #c78c36
+    ImVec4 tab_unfocused = color2;
 
-    style.Colors[ImGuiCol_Header]              = color2;
-    style.Colors[ImGuiCol_HeaderHovered]       = ImVec4(140.0f/255.0f, 100.0f/255.0f, 45.0f/255.0f, 1.00f);
-    style.Colors[ImGuiCol_HeaderActive]        = ImVec4(150.0f/255.0f, 110.0f/255.0f, 50.0f/255.0f, 1.00f);
+    style.Colors[ImGuiCol_Header]        = color2;
+    style.Colors[ImGuiCol_HeaderHovered] = ImVec4(140.0f/255.0f, 100.0f/255.0f, 45.0f/255.0f, 1.00f);
+    style.Colors[ImGuiCol_HeaderActive]  = ImVec4(150.0f/255.0f, 110.0f/255.0f, 50.0f/255.0f, 1.00f);
 
-    style.Colors[ImGuiCol_Tab]                 = color1;
-    style.Colors[ImGuiCol_TabHovered]          = ImVec4(250.0f/255.0f, 180.0f/255.0f, 40.0f/255.0f, 1.00f);
-    style.Colors[ImGuiCol_TabActive]           = color1;
-    style.Colors[ImGuiCol_TabUnfocused]        = color1;
-    style.Colors[ImGuiCol_TabUnfocusedActive]  = color1;
+    style.Colors[ImGuiCol_Tab]                 = tab_unfocused;
+    style.Colors[ImGuiCol_TabUnfocused]        = tab_unfocused;
+    style.Colors[ImGuiCol_TabUnfocusedActive]  = tab_unfocused;
+    style.Colors[ImGuiCol_TabActive]           = tab_focused;
+    style.Colors[ImGuiCol_TabHovered]          = tab_focused;
 
-    style.Colors[ImGuiCol_TitleBg]             = color1;
-    style.Colors[ImGuiCol_TitleBgActive]       = color1;
-    style.Colors[ImGuiCol_TitleBgCollapsed]    = color1;
+    style.Colors[ImGuiCol_TitleBg]          = color1;
+    style.Colors[ImGuiCol_TitleBgActive]    = color1;
+    style.Colors[ImGuiCol_TitleBgCollapsed] = color1;
 
-    style.Colors[ImGuiCol_Border]              = color1;
-    style.Colors[ImGuiCol_BorderShadow]        = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+    style.Colors[ImGuiCol_Border]        = color1;
+    style.Colors[ImGuiCol_BorderShadow]  = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
 
-    style.Colors[ImGuiCol_Button]              = color2;
-    style.Colors[ImGuiCol_ButtonHovered]       = ImVec4(140.0f/255.0f, 100.0f/255.0f, 45.0f/255.0f, 1.00f);
-    style.Colors[ImGuiCol_ButtonActive]        = ImVec4(150.0f/255.0f, 110.0f/255.0f, 50.0f/255.0f, 1.00f);
+    style.Colors[ImGuiCol_Button]        = color2;
+    style.Colors[ImGuiCol_ButtonHovered] = ImVec4(140.0f/255.0f, 100.0f/255.0f, 45.0f/255.0f, 1.00f);
+    style.Colors[ImGuiCol_ButtonActive]  = ImVec4(150.0f/255.0f, 110.0f/255.0f, 50.0f/255.0f, 1.00f);
 
-    style.Colors[ImGuiCol_Text]                = ImVec4(0.85f, 0.85f, 0.85f, 1.00f);
-    style.Colors[ImGuiCol_TextDisabled]        = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
-    style.Colors[ImGuiCol_TextSelectedBg]      = ImVec4(0.00f, 0.80f, 0.00f, 0.50f);
+    style.Colors[ImGuiCol_Text]           = ImVec4(0.85f, 0.85f, 0.85f, 1.00f);
+    style.Colors[ImGuiCol_TextDisabled]   = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
+    style.Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.00f, 0.80f, 0.00f, 0.50f);
 
-    style.Colors[ImGuiCol_FrameBg]             = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);
-    style.Colors[ImGuiCol_FrameBgHovered]      = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
-    style.Colors[ImGuiCol_FrameBgActive]       = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+    style.Colors[ImGuiCol_FrameBg]        = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);
+    style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+    style.Colors[ImGuiCol_FrameBgActive]  = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
 
-    style.Colors[ImGuiCol_Separator]           = ImVec4(0.45f, 0.40f, 0.40f, 0.50f);
+    style.Colors[ImGuiCol_Separator]      = ImVec4(0.45f, 0.40f, 0.40f, 0.50f);
 
-    style.FrameRounding = 3.0f;
-    style.GrabRounding = 3.0f;
-    style.TabRounding = 2.0f;
-    style.WindowBorderSize = 1.0f;
-    style.FrameBorderSize = 1.0f;
-    style.TabBorderSize = 1.0f;
+    style.FrameRounding      = 3.0f;
+    style.GrabRounding       = 3.0f;
+    style.TabRounding        = 2.0f;
+    style.WindowBorderSize   = 1.0f;
+    style.FrameBorderSize    = 1.0f;
+    style.TabBorderSize      = 1.0f;
 }
 
 int main(int, char**)
@@ -100,6 +102,7 @@ int main(int, char**)
 
     int emu = 0, ver = 0;
     bool done = false;
+    bool wide_enabled = false;
     float wide = 47.0f;
     bool r_no = false, t_no = false, g_no = false, cross_small = false;
     bool night = false, insta = false, xfx = false, luffy = false, zero = false;
