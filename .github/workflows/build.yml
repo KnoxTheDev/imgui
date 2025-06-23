@@ -17,7 +17,7 @@ on:
 
 jobs:
   Windows:
-    runs-on: windows-2019
+    runs-on: windows-2025
     env:
       VS_PATH: C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\
       MSBUILD_PATH: C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\
@@ -36,3 +36,9 @@ jobs:
       - name: Build x64 example_glfw_opengl3
         shell: cmd
         run: '"%MSBUILD_PATH%\MSBuild.exe" examples/example_glfw_opengl3/example_glfw_opengl3.vcxproj /p:Platform=x64 /p:Configuration=Release'
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-x64-example_glfw_opengl3
+          path: examples/example_glfw_opengl3/x64/Release/example_glfw_opengl3.exe
