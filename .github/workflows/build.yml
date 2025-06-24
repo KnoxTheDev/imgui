@@ -41,3 +41,13 @@ jobs:
         with:
           name: windows-x64-example_glfw_opengl3
           path: examples/example_glfw_opengl3/Release/example_glfw_opengl3.exe
+
+  Android:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build example_android_opengl3
+      run: |
+        cd examples/example_android_opengl3/android
+        gradle assembleDebug --stacktrace          
