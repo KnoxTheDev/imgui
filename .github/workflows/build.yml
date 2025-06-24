@@ -51,7 +51,11 @@ jobs:
       run: |
         cd examples/example_android_opengl3/android
         gradle assembleRelease --stacktrace          
-  
+    
+    - name: Tree
+      run: |
+        tree examples/example_android_opengl3
+    
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
