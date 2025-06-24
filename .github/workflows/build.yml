@@ -60,4 +60,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: android-build
-        path: examples/example_android_opengl3/android/app/build/outputs/apk/Release/*.apk
+        path: examples/example_android_opengl3/android/app/build/outputs/apk/release/*.apk
