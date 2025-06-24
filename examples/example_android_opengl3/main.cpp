@@ -1,8 +1,8 @@
 // dear imgui: standalone example application for Android + OpenGL ES 3
 //
-// PATCH: This file has been modified to include the UI and logic from the
-// "Snake Bypass" example. The core Android EGL/main loop structure is
-// preserved, while the ImGui rendering part is replaced.
+// This file has been patched to integrate the "Snake Bypass" UI,
+// including its custom theme, font, and DPI-aware scaling logic
+// for a consistent look and feel across different Android devices.
 
 #include "imgui.h"
 #include "imgui_impl_android.h"
@@ -13,7 +13,7 @@
 #include <EGL/egl.h>
 #include <GLES3/gl3.h>
 #include <string>
-#include <stdio.h> // For logging if needed
+#include <stdio.h>
 
 // Data
 static EGLDisplay           g_EglDisplay = EGL_NO_DISPLAY;
@@ -23,8 +23,9 @@ static struct android_app*  g_App = nullptr;
 static bool                 g_Initialized = false;
 static char                 g_LogTag[] = "ImGuiExample";
 static std::string          g_IniFilename = "";
+static float                g_DpiScale = 1.0f; // DPI scale factor for UI elements
 
-// PATCH: State variables from the Snake Bypass example
+// State variables from the Snake Bypass example
 static int emu = 0, ver = 0;
 static bool done = false;
 static bool wide_enabled = false;
@@ -82,7 +83,7 @@ void android_main(struct android_app* app)
 
             if (app->destroyRequested != 0)
             {
-                if (g_Initialized) // Ensure shutdown is called
+                if (g_Initialized)
                     Shutdown();
                 return;
             }
@@ -98,6 +99,18 @@ void Init(struct android_app* app)
         return;
 
     g_App = app;
+
+    // Get screen density to calculate a DPI scale factor.
+    AConfiguration* config = AConfiguration_new();
+    AConfiguration_fromAssetManager(config, app->activity->assetManager);
+    int32_t density = AConfiguration_getDensity(config);
+    AConfiguration_delete(config);
+    const int32_t baseline_density = ACONFIGURATION_DENSITY_MEDIUM; // 160 dpi
+    if (density != ACONFIGURATION_DENSITY_ANY && density != ACONFIGURATION_DENSITY_NONE)
+        g_DpiScale = (float)density / baseline_density;
+    else
+        g_DpiScale = 2.5f; // A reasonable default for high-DPI phones
+
     ANativeWindow_acquire(g_App->window);
 
     // Initialize EGL
@@ -132,42 +145,31 @@ void Init(struct android_app* app)
     ImGui_ImplAndroid_Init(g_App->window);
     ImGui_ImplOpenGL3_Init("#version 300 es");
 
-    // PATCH: Apply the custom theme from the Snake Bypass example
+    // Apply the custom theme
     ApplySnakeTheme();
 
-    // PATCH: Load custom font from assets
-    // IMPORTANT: You must place 'Ruda-Bold.ttf' inside 'examples/example_android_opengl3/android/app/src/main/assets/'
+    // Load custom font from assets
     void* font_data;
-    int font_data_size;
-    font_data_size = GetAssetData("Ruda-Bold.ttf", &font_data);
+    int font_data_size = GetAssetData("Ruda-Bold.ttf", &font_data);
     if (font_data_size > 0)
     {
-        ImFont* font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 24.0f); // Increased size for mobile
+        ImFont* font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 18.0f);
         IM_ASSERT(font != nullptr);
         io.FontDefault = font;
     }
-    else
-    {
-        __android_log_print(ANDROID_LOG_WARN, g_LogTag, "Could not load Ruda-Bold.ttf from assets. Using default font.");
-        ImFontConfig font_cfg;
-        font_cfg.SizePixels = 22.0f;
-        io.Fonts->AddFontDefault(&font_cfg);
-    }
 
-    // PATCH: Scaled up for better readability on high-DPI mobile screens
-    ImGui::GetStyle().ScaleAllSizes(2.5f);
+    // Scale all ImGui style elements by the calculated DPI scale factor
+    ImGui::GetStyle().ScaleAllSizes(g_DpiScale);
 
     g_Initialized = true;
 }
 
 void MainLoopStep()
 {
-    ImGuiIO& io = ImGui::GetIO();
     if (g_EglDisplay == EGL_NO_DISPLAY)
         return;
 
-    // Our state (defined as static globals at the top of the file)
-    static ImVec4 clear_color = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+    ImGuiIO& io = ImGui::GetIO();
 
     // Poll Unicode characters via JNI (for text input)
     PollUnicodeChars();
@@ -181,11 +183,10 @@ void MainLoopStep()
     ImGui_ImplAndroid_NewFrame();
     ImGui::NewFrame();
 
-    // PATCH: Main UI rendering code from Snake Bypass example is now here.
-    // WARNING: Hardcoded window size is not ideal for Android's diverse screen sizes.
-    // For a real app, consider making the window movable/resizable or scaling based on screen size.
-    const ImVec2 gui_size = ImVec2(io.DisplaySize.x * 0.9f, io.DisplaySize.y * 0.8f);
-    ImGui::SetNextWindowSize(gui_size, ImGuiCond_Once);
+    // DPI-aware window sizing
+    const ImVec2 base_gui_size = ImVec2(445.0f, 432.0f);
+    const ImVec2 scaled_gui_size = ImVec2(base_gui_size.x * g_DpiScale, base_gui_size.y * g_DpiScale);
+    ImGui::SetNextWindowSize(scaled_gui_size, ImGuiCond_Once);
     ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_Once, ImVec2(0.5f, 0.5f));
 
     static bool show_main_window = true;
@@ -215,7 +216,7 @@ void MainLoopStep()
                 ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
                 if (ImGui::Button("BYPASS EMULATOR", ImVec2(-1, 0))) { done = true; }
                 ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
-                if (ImGui::Button("SAFE EXIT", ImVec2(-1, 0))) { ANativeActivity_finish(g_App->activity); } // PATCH: Android-specific exit
+                if (ImGui::Button("SAFE EXIT", ImVec2(-1, 0))) { ANativeActivity_finish(g_App->activity); }
                 ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
                 if (ImGui::Button("REST GUEST", ImVec2(-1, 0))) { done = false; }
                 if (done)
@@ -259,11 +260,12 @@ void MainLoopStep()
     }
     ImGui::End();
     if (!show_main_window)
-        ANativeActivity_finish(g_App->activity); // PATCH: Android-specific exit
+        ANativeActivity_finish(g_App->activity);
 
     // Rendering
     ImGui::Render();
     glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+    static ImVec4 clear_color = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
     glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
     glClear(GL_COLOR_BUFFER_BIT);
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -274,7 +276,7 @@ void Shutdown()
 {
     if (!g_Initialized)
         return;
-    g_Initialized = false; // Set early to stop the main loop
+    g_Initialized = false;
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplAndroid_Shutdown();
     ImGui::DestroyContext();
@@ -291,7 +293,6 @@ void Shutdown()
     ANativeWindow_release(g_App->window);
 }
 
-// PATCH: The ApplySnakeTheme function, copied directly
 static void ApplySnakeTheme()
 {
     ImGuiStyle& style = ImGui::GetStyle();
@@ -341,7 +342,6 @@ static void ApplySnakeTheme()
     style.TabBorderSize      = 1.0f;
 }
 
-// Helper functions (unchanged)
 static int ShowSoftKeyboardInput()
 {
     JavaVM* java_vm = g_App->activity->vm;
