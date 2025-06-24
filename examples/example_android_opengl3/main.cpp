@@ -1,10 +1,8 @@
 // dear imgui: standalone example application for Android + OpenGL ES 3
-
-// Learn about Dear ImGui:
-// - FAQ                  https://dearimgui.com/faq
-// - Getting Started      https://dearimgui.com/getting-started
-// - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
-// - Introduction, links and more at the top of imgui.cpp
+//
+// PATCH: This file has been modified to include the UI and logic from the
+// "Snake Bypass" example. The core Android EGL/main loop structure is
+// preserved, while the ImGui rendering part is replaced.
 
 #include "imgui.h"
 #include "imgui_impl_android.h"
@@ -15,6 +13,7 @@
 #include <EGL/egl.h>
 #include <GLES3/gl3.h>
 #include <string>
+#include <stdio.h> // For logging if needed
 
 // Data
 static EGLDisplay           g_EglDisplay = EGL_NO_DISPLAY;
@@ -25,6 +24,14 @@ static bool                 g_Initialized = false;
 static char                 g_LogTag[] = "ImGuiExample";
 static std::string          g_IniFilename = "";
 
+// PATCH: State variables from the Snake Bypass example
+static int emu = 0, ver = 0;
+static bool done = false;
+static bool wide_enabled = false;
+static float wide = 47.0f;
+static bool r_no = false, t_no = false, g_no = false, cross_small = false;
+static bool night = false, insta = false, xfx = false, luffy = false, zero = false;
+
 // Forward declarations of helper functions
 static void Init(struct android_app* app);
 static void Shutdown();
@@ -32,6 +39,7 @@ static void MainLoopStep();
 static int ShowSoftKeyboardInput();
 static int PollUnicodeChars();
 static int GetAssetData(const char* filename, void** out_data);
+static void ApplySnakeTheme();
 
 // Main code
 static void handleAppCmd(struct android_app* app, int32_t appCmd)
@@ -67,27 +75,20 @@ void android_main(struct android_app* app)
         int out_events;
         struct android_poll_source* out_data;
 
-        // Poll all events. If the app is not visible, this loop blocks until g_Initialized == true.
         while (ALooper_pollOnce(g_Initialized ? 0 : -1, nullptr, &out_events, (void**)&out_data) >= 0)
         {
-            // Process one event
             if (out_data != nullptr)
                 out_data->process(app, out_data);
 
-            // Exit the app by returning from within the infinite loop
             if (app->destroyRequested != 0)
             {
-                // shutdown() should have been called already while processing the
-                // app command APP_CMD_TERM_WINDOW. But we play save here
-                if (!g_Initialized)
+                if (g_Initialized) // Ensure shutdown is called
                     Shutdown();
-
                 return;
             }
         }
-
-        // Initiate a new frame
-        MainLoopStep();
+        if (g_Initialized)
+            MainLoopStep();
     }
 }
 
@@ -100,35 +101,22 @@ void Init(struct android_app* app)
     ANativeWindow_acquire(g_App->window);
 
     // Initialize EGL
-    // This is mostly boilerplate code for EGL...
     {
         g_EglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-        if (g_EglDisplay == EGL_NO_DISPLAY)
-            __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglGetDisplay(EGL_DEFAULT_DISPLAY) returned EGL_NO_DISPLAY");
-
-        if (eglInitialize(g_EglDisplay, 0, 0) != EGL_TRUE)
-            __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglInitialize() returned with an error");
-
+        if (g_EglDisplay == EGL_NO_DISPLAY) __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglGetDisplay(EGL_DEFAULT_DISPLAY) returned EGL_NO_DISPLAY");
+        if (eglInitialize(g_EglDisplay, 0, 0) != EGL_TRUE) __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglInitialize() returned with an error");
         const EGLint egl_attributes[] = { EGL_BLUE_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_RED_SIZE, 8, EGL_DEPTH_SIZE, 24, EGL_SURFACE_TYPE, EGL_WINDOW_BIT, EGL_NONE };
         EGLint num_configs = 0;
-        if (eglChooseConfig(g_EglDisplay, egl_attributes, nullptr, 0, &num_configs) != EGL_TRUE)
-            __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglChooseConfig() returned with an error");
-        if (num_configs == 0)
-            __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglChooseConfig() returned 0 matching config");
-
-        // Get the first matching config
+        if (eglChooseConfig(g_EglDisplay, egl_attributes, nullptr, 0, &num_configs) != EGL_TRUE) __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglChooseConfig() returned with an error");
+        if (num_configs == 0) __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglChooseConfig() returned 0 matching config");
         EGLConfig egl_config;
         eglChooseConfig(g_EglDisplay, egl_attributes, &egl_config, 1, &num_configs);
         EGLint egl_format;
         eglGetConfigAttrib(g_EglDisplay, egl_config, EGL_NATIVE_VISUAL_ID, &egl_format);
         ANativeWindow_setBuffersGeometry(g_App->window, 0, 0, egl_format);
-
         const EGLint egl_context_attributes[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE };
         g_EglContext = eglCreateContext(g_EglDisplay, egl_config, EGL_NO_CONTEXT, egl_context_attributes);
-
-        if (g_EglContext == EGL_NO_CONTEXT)
-            __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglCreateContext() returned EGL_NO_CONTEXT");
-
+        if (g_EglContext == EGL_NO_CONTEXT) __android_log_print(ANDROID_LOG_ERROR, g_LogTag, "%s", "eglCreateContext() returned EGL_NO_CONTEXT");
         g_EglSurface = eglCreateWindowSurface(g_EglDisplay, egl_config, g_App->window, nullptr);
         eglMakeCurrent(g_EglDisplay, g_EglSurface, g_EglSurface, g_EglContext);
     }
@@ -137,55 +125,37 @@ void Init(struct android_app* app)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
-
-    // Redirect loading/saving of .ini file to our location.
-    // Make sure 'g_IniFilename' persists while we use Dear ImGui.
     g_IniFilename = std::string(app->activity->internalDataPath) + "/imgui.ini";
-    io.IniFilename = g_IniFilename.c_str();;
-
-    // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
+    io.IniFilename = g_IniFilename.c_str();
 
     // Setup Platform/Renderer backends
     ImGui_ImplAndroid_Init(g_App->window);
     ImGui_ImplOpenGL3_Init("#version 300 es");
 
-    // Load Fonts
-    // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
-    // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
-    // - Read 'docs/FONTS.md' for more instructions and details.
-    // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
-    // - Android: The TTF files have to be placed into the assets/ directory (android/app/src/main/assets), we use our GetAssetData() helper to retrieve them.
+    // PATCH: Apply the custom theme from the Snake Bypass example
+    ApplySnakeTheme();
 
-    // We load the default font with increased size to improve readability on many devices with "high" DPI.
-    // FIXME: Put some effort into DPI awareness.
-    // Important: when calling AddFontFromMemoryTTF(), ownership of font_data is transferred by Dear ImGui by default (deleted is handled by Dear ImGui), unless we set FontDataOwnedByAtlas=false in ImFontConfig
-    ImFontConfig font_cfg;
-    font_cfg.SizePixels = 22.0f;
-    io.Fonts->AddFontDefault(&font_cfg);
-    //void* font_data;
-    //int font_data_size;
-    //ImFont* font;
-    //font_data_size = GetAssetData("segoeui.ttf", &font_data);
-    //font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 16.0f);
-    //IM_ASSERT(font != nullptr);
-    //font_data_size = GetAssetData("DroidSans.ttf", &font_data);
-    //font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 16.0f);
-    //IM_ASSERT(font != nullptr);
-    //font_data_size = GetAssetData("Roboto-Medium.ttf", &font_data);
-    //font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 16.0f);
-    //IM_ASSERT(font != nullptr);
-    //font_data_size = GetAssetData("Cousine-Regular.ttf", &font_data);
-    //font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 15.0f);
-    //IM_ASSERT(font != nullptr);
-    //font_data_size = GetAssetData("ArialUni.ttf", &font_data);
-    //font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 18.0f);
-    //IM_ASSERT(font != nullptr);
+    // PATCH: Load custom font from assets
+    // IMPORTANT: You must place 'Ruda-Bold.ttf' inside 'examples/example_android_opengl3/android/app/src/main/assets/'
+    void* font_data;
+    int font_data_size;
+    font_data_size = GetAssetData("Ruda-Bold.ttf", &font_data);
+    if (font_data_size > 0)
+    {
+        ImFont* font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 24.0f); // Increased size for mobile
+        IM_ASSERT(font != nullptr);
+        io.FontDefault = font;
+    }
+    else
+    {
+        __android_log_print(ANDROID_LOG_WARN, g_LogTag, "Could not load Ruda-Bold.ttf from assets. Using default font.");
+        ImFontConfig font_cfg;
+        font_cfg.SizePixels = 22.0f;
+        io.Fonts->AddFontDefault(&font_cfg);
+    }
 
-    // Arbitrary scale-up
-    // FIXME: Put some effort into DPI awareness
-    ImGui::GetStyle().ScaleAllSizes(3.0f);
+    // PATCH: Scaled up for better readability on high-DPI mobile screens
+    ImGui::GetStyle().ScaleAllSizes(2.5f);
 
     g_Initialized = true;
 }
@@ -196,17 +166,11 @@ void MainLoopStep()
     if (g_EglDisplay == EGL_NO_DISPLAY)
         return;
 
-    // Our state
-    // (we use static, which essentially makes the variable globals, as a convenience to keep the example code easy to follow)
-    static bool show_demo_window = true;
-    static bool show_another_window = false;
-    static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    // Our state (defined as static globals at the top of the file)
+    static ImVec4 clear_color = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
 
-    // Poll Unicode characters via JNI
-    // FIXME: do not call this every frame because of JNI overhead
+    // Poll Unicode characters via JNI (for text input)
     PollUnicodeChars();
-
-    // Open on-screen (soft) input if requested by Dear ImGui
     static bool WantTextInputLast = false;
     if (io.WantTextInput && !WantTextInputLast)
         ShowSoftKeyboardInput();
@@ -217,42 +181,85 @@ void MainLoopStep()
     ImGui_ImplAndroid_NewFrame();
     ImGui::NewFrame();
 
-    // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-    if (show_demo_window)
-        ImGui::ShowDemoWindow(&show_demo_window);
+    // PATCH: Main UI rendering code from Snake Bypass example is now here.
+    // WARNING: Hardcoded window size is not ideal for Android's diverse screen sizes.
+    // For a real app, consider making the window movable/resizable or scaling based on screen size.
+    const ImVec2 gui_size = ImVec2(io.DisplaySize.x * 0.9f, io.DisplaySize.y * 0.8f);
+    ImGui::SetNextWindowSize(gui_size, ImGuiCond_Once);
+    ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_Once, ImVec2(0.5f, 0.5f));
 
-    // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+    static bool show_main_window = true;
+    if (ImGui::Begin("SNAKE BYPASS", &show_main_window, ImGuiWindowFlags_NoResize))
     {
-        static float f = 0.0f;
-        static int counter = 0;
+        if (ImGui::BeginTabBar("Tabs##Snake"))
+        {
+            if (ImGui::BeginTabItem("BYPASS"))
+            {
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                ImGui::TextColored(ImVec4(0, 1, 0, 1), "Welcome to SNAKE PRIVATE BYPASS");
+                ImGui::Separator();
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                ImGui::Text("SELECT YOUR EMULATOR :");
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                ImGui::RadioButton("GAMELOOP 7.1##emu", &emu, 0); ImGui::SameLine();
+                ImGui::RadioButton("SMARTGAGA##emu", &emu, 1);
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                ImGui::Separator();
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                ImGui::Text("SELECT YOUR GAME VERSION :");
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                ImGui::RadioButton("Global##ver", &ver, 0); ImGui::SameLine();
+                ImGui::RadioButton("Korea##ver", &ver, 1); ImGui::SameLine();
+                ImGui::RadioButton("Taiwan##ver", &ver, 2); ImGui::SameLine();
+                ImGui::RadioButton("Vietnam##ver", &ver, 3);
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                if (ImGui::Button("BYPASS EMULATOR", ImVec2(-1, 0))) { done = true; }
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                if (ImGui::Button("SAFE EXIT", ImVec2(-1, 0))) { ANativeActivity_finish(g_App->activity); } // PATCH: Android-specific exit
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                if (ImGui::Button("REST GUEST", ImVec2(-1, 0))) { done = false; }
+                if (done)
+                {
+                    ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                    ImGui::TextColored(ImVec4(0, 1, 0, 1), "BYPASS DONE SUCCESSFUL");
+                    ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                }
+                ImGui::EndTabItem();
+            }
 
-        ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
-
-        ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-        ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-        ImGui::Checkbox("Another Window", &show_another_window);
-
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-        ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-        if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-            counter++;
-        ImGui::SameLine();
-        ImGui::Text("counter = %d", counter);
-
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-        ImGui::End();
+            if (ImGui::BeginTabItem("MISC"))
+            {
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                ImGui::TextColored(ImVec4(0, 1, 0, 1), "SNAKE PRIVATE BYPASS");
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                ImGui::Text("Memory Hacks");
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                ImGui::Separator();
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                ImGui::Checkbox("Wide View##widechk", &wide_enabled);
+                ImGui::SameLine();
+                ImGui::SliderFloat("##wide", &wide, 0.0f, 100.0f, "%.0f");
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                ImGui::Checkbox("No Recoil##no", &r_no); ImGui::SameLine();
+                ImGui::Checkbox("No Tree##no", &t_no); ImGui::SameLine();
+                ImGui::Checkbox("No Grass##no", &g_no); ImGui::SameLine();
+                ImGui::Checkbox("Small Crosshair##cross", &cross_small);
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                ImGui::Checkbox("Night Mode##nm", &night); ImGui::SameLine();
+                ImGui::Checkbox("InstaHit##ih", &insta); ImGui::SameLine();
+                ImGui::Checkbox("X-Effect##xf", &xfx); ImGui::SameLine();
+                ImGui::Checkbox("LUFFY-HAND##lf", &luffy);
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                ImGui::Checkbox("ZeroHead##zh", &zero);
+                ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+                ImGui::EndTabItem();
+            }
+            ImGui::EndTabBar();
+        }
     }
-
-    // 3. Show another simple window.
-    if (show_another_window)
-    {
-        ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-        ImGui::Text("Hello from another window!");
-        if (ImGui::Button("Close Me"))
-            show_another_window = false;
-        ImGui::End();
-    }
+    ImGui::End();
+    if (!show_main_window)
+        ANativeActivity_finish(g_App->activity); // PATCH: Android-specific exit
 
     // Rendering
     ImGui::Render();
@@ -267,105 +274,113 @@ void Shutdown()
 {
     if (!g_Initialized)
         return;
-
-    // Cleanup
+    g_Initialized = false; // Set early to stop the main loop
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplAndroid_Shutdown();
     ImGui::DestroyContext();
-
     if (g_EglDisplay != EGL_NO_DISPLAY)
     {
         eglMakeCurrent(g_EglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-
-        if (g_EglContext != EGL_NO_CONTEXT)
-            eglDestroyContext(g_EglDisplay, g_EglContext);
-
-        if (g_EglSurface != EGL_NO_SURFACE)
-            eglDestroySurface(g_EglDisplay, g_EglSurface);
-
+        if (g_EglContext != EGL_NO_CONTEXT) eglDestroyContext(g_EglDisplay, g_EglContext);
+        if (g_EglSurface != EGL_NO_SURFACE) eglDestroySurface(g_EglDisplay, g_EglSurface);
         eglTerminate(g_EglDisplay);
     }
-
     g_EglDisplay = EGL_NO_DISPLAY;
     g_EglContext = EGL_NO_CONTEXT;
     g_EglSurface = EGL_NO_SURFACE;
     ANativeWindow_release(g_App->window);
-
-    g_Initialized = false;
 }
 
-// Helper functions
+// PATCH: The ApplySnakeTheme function, copied directly
+static void ApplySnakeTheme()
+{
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.95f);
+    ImVec4 color1 = ImVec4(232.0f/255.0f, 163.0f/255.0f, 33.0f/255.0f, 1.00f);
+    ImVec4 color2 = ImVec4(130.0f/255.0f, 92.0f/255.0f, 38.0f/255.0f, 1.00f);
+    ImVec4 tab_focused   = ImVec4(199.0f/255.0f, 140.0f/255.0f, 54.0f/255.0f, 1.00f);
+    ImVec4 tab_unfocused = color2;
+    style.Colors[ImGuiCol_Header]        = color2;
+    style.Colors[ImGuiCol_HeaderHovered] = ImVec4(140.0f/255.0f, 100.0f/255.0f, 45.0f/255.0f, 1.00f);
+    style.Colors[ImGuiCol_HeaderActive]  = ImVec4(150.0f/255.0f, 110.0f/255.0f, 50.0f/255.0f, 1.00f);
+    style.Colors[ImGuiCol_Tab]                 = tab_unfocused;
+    style.Colors[ImGuiCol_TabUnfocused]        = tab_unfocused;
+    style.Colors[ImGuiCol_TabUnfocusedActive]  = tab_unfocused;
+    style.Colors[ImGuiCol_TabActive]           = tab_focused;
+    style.Colors[ImGuiCol_TabHovered]          = tab_focused;
+    style.Colors[ImGuiCol_TitleBg]          = color1;
+    style.Colors[ImGuiCol_TitleBgActive]    = color1;
+    style.Colors[ImGuiCol_TitleBgCollapsed] = color1;
+    style.Colors[ImGuiCol_Button]        = color2;
+    style.Colors[ImGuiCol_ButtonHovered] = ImVec4(140.0f/255.0f, 100.0f/255.0f, 45.0f/255.0f, 1.00f);
+    style.Colors[ImGuiCol_ButtonActive]  = ImVec4(150.0f/255.0f, 110.0f/255.0f, 50.0f/255.0f, 1.00f);
+    style.Colors[ImGuiCol_Text]           = ImVec4(0.85f, 0.85f, 0.85f, 1.00f);
+    style.Colors[ImGuiCol_TextDisabled]   = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
+    style.Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.00f, 0.80f, 0.00f, 0.50f);
+    style.Colors[ImGuiCol_FrameBg]        = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);
+    style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+    style.Colors[ImGuiCol_FrameBgActive]  = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+    style.Colors[ImGuiCol_Separator]      = ImVec4(0.45f, 0.40f, 0.40f, 0.50f);
+    style.Colors[ImGuiCol_CheckMark] = tab_focused;
+    style.Colors[ImGuiCol_SliderGrab]        = color1;
+    style.Colors[ImGuiCol_SliderGrabActive]  = color1;
+    style.WindowBorderSize = 0.0f;
+    style.FrameBorderSize  = 0.0f;
+    style.TabBorderSize    = 0.0f;
+    style.GrabMinSize      = 10.0f;
+    style.Colors[ImGuiCol_ResizeGrip]         = ImVec4(0, 0, 0, 0);
+    style.Colors[ImGuiCol_ResizeGripHovered]  = ImVec4(0, 0, 0, 0);
+    style.Colors[ImGuiCol_ResizeGripActive]   = ImVec4(0, 0, 0, 0);
+    style.Colors[ImGuiCol_Border]        = ImVec4(0, 0, 0, 0);
+    style.Colors[ImGuiCol_BorderShadow]  = ImVec4(0, 0, 0, 0);
+    style.FrameRounding      = 3.0f;
+    style.GrabRounding       = 3.0f;
+    style.TabRounding        = 2.0f;
+    style.WindowBorderSize   = 1.0f;
+    style.FrameBorderSize    = 1.0f;
+    style.TabBorderSize      = 1.0f;
+}
 
-// Unfortunately, there is no way to show the on-screen input from native code.
-// Therefore, we call ShowSoftKeyboardInput() of the main activity implemented in MainActivity.kt via JNI.
+// Helper functions (unchanged)
 static int ShowSoftKeyboardInput()
 {
     JavaVM* java_vm = g_App->activity->vm;
     JNIEnv* java_env = nullptr;
-
     jint jni_return = java_vm->GetEnv((void**)&java_env, JNI_VERSION_1_6);
-    if (jni_return == JNI_ERR)
-        return -1;
-
+    if (jni_return == JNI_ERR) return -1;
     jni_return = java_vm->AttachCurrentThread(&java_env, nullptr);
-    if (jni_return != JNI_OK)
-        return -2;
-
+    if (jni_return != JNI_OK) return -2;
     jclass native_activity_clazz = java_env->GetObjectClass(g_App->activity->clazz);
-    if (native_activity_clazz == nullptr)
-        return -3;
-
+    if (native_activity_clazz == nullptr) return -3;
     jmethodID method_id = java_env->GetMethodID(native_activity_clazz, "showSoftInput", "()V");
-    if (method_id == nullptr)
-        return -4;
-
+    if (method_id == nullptr) return -4;
     java_env->CallVoidMethod(g_App->activity->clazz, method_id);
-
     jni_return = java_vm->DetachCurrentThread();
-    if (jni_return != JNI_OK)
-        return -5;
-
+    if (jni_return != JNI_OK) return -5;
     return 0;
 }
 
-// Unfortunately, the native KeyEvent implementation has no getUnicodeChar() function.
-// Therefore, we implement the processing of KeyEvents in MainActivity.kt and poll
-// the resulting Unicode characters here via JNI and send them to Dear ImGui.
 static int PollUnicodeChars()
 {
     JavaVM* java_vm = g_App->activity->vm;
     JNIEnv* java_env = nullptr;
-
     jint jni_return = java_vm->GetEnv((void**)&java_env, JNI_VERSION_1_6);
-    if (jni_return == JNI_ERR)
-        return -1;
-
+    if (jni_return == JNI_ERR) return -1;
     jni_return = java_vm->AttachCurrentThread(&java_env, nullptr);
-    if (jni_return != JNI_OK)
-        return -2;
-
+    if (jni_return != JNI_OK) return -2;
     jclass native_activity_clazz = java_env->GetObjectClass(g_App->activity->clazz);
-    if (native_activity_clazz == nullptr)
-        return -3;
-
+    if (native_activity_clazz == nullptr) return -3;
     jmethodID method_id = java_env->GetMethodID(native_activity_clazz, "pollUnicodeChar", "()I");
-    if (method_id == nullptr)
-        return -4;
-
-    // Send the actual characters to Dear ImGui
+    if (method_id == nullptr) return -4;
     ImGuiIO& io = ImGui::GetIO();
     jint unicode_character;
     while ((unicode_character = java_env->CallIntMethod(g_App->activity->clazz, method_id)) != 0)
         io.AddInputCharacter(unicode_character);
-
     jni_return = java_vm->DetachCurrentThread();
-    if (jni_return != JNI_OK)
-        return -5;
-
+    if (jni_return != JNI_OK) return -5;
     return 0;
 }
 
-// Helper to retrieve data placed into the assets/ directory (android/app/src/main/assets)
 static int GetAssetData(const char* filename, void** outData)
 {
     int num_bytes = 0;
