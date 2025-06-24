@@ -51,7 +51,7 @@ jobs:
     - name: Set up Android NDK
       uses: nttld/setup-ndk@v1
       with:
-        version: r27c # Using a recent, stable NDK version
+        ndk-version: r27c # Using a recent, stable NDK version
 
     - name: Build Android Library (arm64-v8a) with CMake
       run: |
