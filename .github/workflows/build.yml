@@ -39,7 +39,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: windows-x64-example_glfw_opengl3
+          name: windows-build
           path: examples/example_glfw_opengl3/Release/example_glfw_opengl3.exe
 
   Android:
@@ -50,4 +50,10 @@ jobs:
     - name: Build example_android_opengl3
       run: |
         cd examples/example_android_opengl3/android
-        gradle assembleDebug --stacktrace          
+        gradle assembleRelease --stacktrace          
+  
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-build
+        path: examples/example_android_opengl3/android/app/build/outputs/apk/Release/*.apk
