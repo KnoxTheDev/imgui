@@ -16,8 +16,6 @@ static bool g_Initialized = false;
 static char g_LogTag[] = "ImGuiHook";
 static float g_DpiScale = 2.5f;
 
-static bool show_menu = true;
-
 static int emu = 0, ver = 0;
 static bool done = false;
 static bool wide_enabled = false;
@@ -40,7 +38,6 @@ EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
     }
 
     ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplAndroid_NewFrame();
     ImGui::NewFrame();
 
     RenderUI();
@@ -51,21 +48,11 @@ EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
     return orig_eglSwapBuffers(dpy, surface);
 }
 
-int32_t (*orig_handle_input)(AInputEvent* event);
-int32_t hook_handle_input(AInputEvent* event) {
-    if (g_Initialized) {
-        ImGui_ImplAndroid_HandleInputEvent(event);
-    }
-    return orig_handle_input(event);
-}
-
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 {
     const char* target_lib = "libUE4.so";
 
     xhook_register(target_lib, "eglSwapBuffers", (void*)hook_eglSwapBuffers, (void**)&orig_eglSwapBuffers);
-    xhook_register(target_lib, "Android_JNI_handleInput", (void*)hook_handle_input, (void**)&orig_handle_input);
-
     xhook_refresh(1);
 
     return JNI_VERSION_1_6;
@@ -77,6 +64,7 @@ void InitImGui()
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     io.IniFilename = nullptr;
+    io.MouseDrawCursor = true; // Optional: show a cursor even without input
 
     g_EglContext = eglGetCurrentContext();
     ImGui_ImplAndroid_Init(nullptr);
@@ -91,19 +79,13 @@ void InitImGui()
 
 void RenderUI()
 {
-    ImGuiIO& io = ImGui::GetIO();
-    if (ImGui::IsMouseReleased(0) && io.MousePos.x < 100 && io.MousePos.y < 100) {
-        show_menu = !show_menu;
-    }
-    
-    if (!show_menu) return;
-
     const ImVec2 base_gui_size = ImVec2(445.0f, 432.0f);
     const ImVec2 scaled_gui_size = ImVec2(base_gui_size.x * g_DpiScale, base_gui_size.y * g_DpiScale);
     ImGui::SetNextWindowSize(scaled_gui_size, ImGuiCond_Once);
-    ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_Once, ImVec2(0.5f, 0.5f));
-
-    if (ImGui::Begin("SNAKE BYPASS", &show_menu, ImGuiWindowFlags_NoResize))
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.5f), ImGuiCond_Once, ImVec2(0.5f, 0.5f));
+    
+    static bool show_window_true = true; // Window is always shown
+    if (ImGui::Begin("SNAKE BYPASS", &show_window_true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
     {
         if (ImGui::BeginTabBar("Tabs##Snake"))
         {
