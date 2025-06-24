@@ -239,7 +239,7 @@ void MainLoopStep()
                 ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
                 ImGui::Checkbox("Wide View##widechk", &wide_enabled);
                 ImGui::SameLine();
-                ImGui::SliderFloat("##wide", &wide, 0.0f, 100.0f, "%.0f");
+                ImGui::SliderFloat("##wide", &wide, 40.0f, 200.0f, "%.0f");
                 ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
                 ImGui::Checkbox("No Recoil##no", &r_no); ImGui::SameLine();
                 ImGui::Checkbox("No Tree##no", &t_no); ImGui::SameLine();
